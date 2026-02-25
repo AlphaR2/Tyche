@@ -1,0 +1,30 @@
+[package]
+name        = "tyche-escrow"
+version     = "0.1.0"
+description = "Tyche protocol SOL custody. Per-bidder EscrowVault PDAs, fund release, and refund logic."
+edition     = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name       = "tyche_escrow"
+
+[features]
+# Disables the program entrypoint so this crate can be linked as a library.
+# Required when used as a dependency in tyche-cpi or the test suite.
+no-entrypoint = []
+default       = []
+
+[dependencies]
+tyche-common     = { workspace = true }
+pinocchio        = { workspace = true }
+pinocchio-log    = { workspace = true }
+pinocchio-pubkey = { workspace = true }
+pinocchio-system = { workspace = true }
+bytemuck         = { workspace = true }
+num_enum         = { workspace = true }
+
+[dev-dependencies]
+shank = { workspace = true }
+
+[lints]
+workspace = true

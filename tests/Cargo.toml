@@ -1,0 +1,22 @@
+[package]
+name    = "tyche-tests"
+version = "0.1.0"
+edition = "2021"
+
+[[test]]
+name = "integration"
+path = "src/integration/full_flow.rs"
+
+[dev-dependencies]
+tyche-common  = { workspace = true }
+tyche-core    = { workspace = true }
+tyche-escrow  = { workspace = true }
+tyche-auction = { workspace = true }
+litesvm       = { workspace = true }
+litesvm-token = { workspace = true }
+solana-sdk    = { workspace = true }
+tokio         = { workspace = true }
+
+
+[lints]
+workspace = true

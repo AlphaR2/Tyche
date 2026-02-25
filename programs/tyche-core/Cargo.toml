@@ -1,0 +1,38 @@
+[package]
+name        = "tyche-core"
+version     = "0.1.0"
+description = "Tyche protocol competition state machine. Asset-type agnostic CEE lifecycle management."
+edition     = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name       = "tyche_core"
+
+[features]
+# Disables the program entrypoint so this crate can be linked as a library.
+# Required when used as a dependency in tyche-cpi or the test suite.
+no-entrypoint = []
+default       = []
+
+[dependencies]
+tyche-common                = { workspace = true }
+pinocchio                   = { workspace = true }
+pinocchio-log               = { workspace = true }
+pinocchio-pubkey            = { workspace = true }
+pinocchio-system            = { workspace = true }
+bytemuck                    = { workspace = true }
+solana-address              = { workspace = true }
+num_enum                    = { workspace = true }
+shank                       = { workspace = true }
+ephemeral-rollups-pinocchio = { workspace = true }
+sha2                        = { workspace = true }
+
+
+# Off-chain only — instruction builders, SDK helpers, and the compute_discriminators
+# dev binary. Not pulled in when compiling for the SBF target.
+[target.'cfg(not(target_os = "solana"))'.dependencies]
+solana-sdk = { workspace = true }
+solana-system-interface = { workspace = true }
+
+[lints]
+workspace = true

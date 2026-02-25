@@ -1,0 +1,19 @@
+[package]
+name        = "tyche-common"
+version     = "0.1.0"
+description = "Shared constants, validation macros, PDA utilities, and MagicBlock delegation CPI helpers for the Tyche protocol programs."
+edition     = "2021"
+
+[lib]
+crate-type = ["lib"]
+
+[dependencies]
+pinocchio        = { workspace = true }
+pinocchio-log    = { workspace = true }
+pinocchio-pubkey = { workspace = true }
+pinocchio-system = { workspace = true }
+bytemuck         = { workspace = true }
+num_enum         = { workspace = true }
+
+[lints]
+workspace = true

@@ -1,0 +1,57 @@
+[workspace]
+resolver = "2"
+members = [
+    "programs/tyche-core",
+    "programs/tyche-escrow",
+    "programs/tyche-auction",
+    "crates/tyche-common",
+    "crates/tyche-cpi",
+    "tests",
+]
+
+[workspace.dependencies]
+pinocchio        = { version = "0.10.1", features = ["copy"] }
+pinocchio-log    = "0.5.1"
+pinocchio-pubkey = "0.3"
+pinocchio-system = "0.5.0"
+pinocchio-token  = "0.5.0"
+ephemeral-rollups-pinocchio = { version = "0.8.2" }
+bytemuck = { version = "1.24.0", features = ["derive"] }
+solana-address = { version = "2.0", features = ["bytemuck"] }
+
+
+# Utilities
+num_enum = "0.7"
+sha2     = "0.10.8"
+shank   = "0.4.8"
+
+# Testing
+litesvm       = "0.9.1"
+litesvm-token = "0.9.1"
+solana-sdk    = "3.0.0"
+solana-system-interface = "3.0.0"
+tokio         = { version = "1", features = ["full"] }
+
+# Internal workspace crates
+tyche-common  = { path = "crates/tyche-common" }
+tyche-core    = { path = "programs/tyche-core",    features = ["no-entrypoint"] }
+tyche-escrow  = { path = "programs/tyche-escrow",  features = ["no-entrypoint"] }
+tyche-auction = { path = "programs/tyche-auction", features = ["no-entrypoint"] }
+
+[profile.release]
+opt-level       = "z"
+lto             = "fat"
+codegen-units   = 1
+panic           = "abort"
+overflow-checks = false
+
+[profile.release.build-override]
+opt-level     = 3
+incremental   = false
+codegen-units = 1
+
+[profile.dev]
+overflow-checks = true
+
+[workspace.lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_os, values("solana"))'] }
