@@ -108,12 +108,6 @@ just test-rust
 just test-ts
 ```
 
-## Running a Local MagicBlock Validator
-
-The delegation and ephemeral rollup functionality requires a local MagicBlock validator
-running alongside the standard Solana test validator. See docs/CEE.md for the exact
-setup commands.
-
 ## Documentation
 
 | Document              | Contents                                              |
