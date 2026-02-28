@@ -10,7 +10,7 @@
 /// Do not edit manually — re-run the binary if instruction or account names change.
 
 
-// ── Instruction discriminators 
+// ── Competition instruction discriminators 
 pub const CREATE_COMPETITION:   [u8; 8] = [110, 212, 234, 212, 118, 128, 158, 244];
 pub const ACTIVATE_COMPETITION: [u8; 8] = [153, 105, 130, 88, 198, 208, 30, 118];
 pub const EXTEND_COMPETITION:   [u8; 8] = [9, 0, 18, 247, 115, 18, 176, 115];
@@ -19,6 +19,12 @@ pub const SETTLE_COMPETITION:   [u8; 8] = [83, 121, 9, 141, 170, 133, 230, 151];
 pub const CANCEL_COMPETITION:   [u8; 8] = [62, 4, 198, 98, 200, 41, 255, 72];
 pub const REGISTER_BID:         [u8; 8] = [26, 173, 93, 67, 171, 107, 118, 212];
 
+// ── Protocol config instruction discriminators 
+pub const INITIALIZE_PROTOCOL_CONFIG: [u8; 8] = [28, 50, 43, 233, 244, 98, 123, 118];
+pub const UPDATE_PROTOCOL_CONFIG:     [u8; 8] = [197, 97, 123, 54, 221, 168, 11, 135];
+pub const UPDATE_CRANK_AUTHORITY:     [u8; 8] = [108, 25, 148, 152, 87, 11, 210, 84];
+
 // ── Account discriminators 
-pub const COMPETITION_STATE:    [u8; 8] = [92, 143, 28, 37, 251, 106, 9, 146];
-pub const PARTICIPANT_RECORD:   [u8; 8] = [106, 52, 124, 24, 80, 173, 194, 4];
+pub const COMPETITION_STATE:  [u8; 8] = [92, 143, 28, 37, 251, 106, 9, 146];
+pub const PARTICIPANT_RECORD: [u8; 8] = [106, 52, 124, 24, 80, 173, 194, 4];
+pub const PROTOCOL_CONFIG:    [u8; 8] = [207, 91, 250, 28, 152, 179, 215, 209];

@@ -21,6 +21,7 @@ use ephemeral_rollups_pinocchio::{
         MemberFlags,
         MembersArgs
     }, instruction::delegate_account, types::DelegateConfig,
+    
 };
 
 // Layer 1 — account validation: destructure raw slice, enforce writability and signer presence.
@@ -46,18 +47,18 @@ impl<'a> TryFrom<&'a [AccountView]> for ActivateCompetitionAccounts<'a> {
 
     fn try_from(accounts: &'a [AccountView]) -> Result<Self, Self::Error> {
         let [
-            competition, 
-            authority, 
-            payer, 
-            permission, 
-            delegation_buffer, 
-            delegation_record, 
-            delegation_metadata, 
-            delegation_program, 
-            permission_program, 
-            system_program, 
-            validator, 
-             _
+            competition,
+            authority,
+            payer,
+            permission,
+            delegation_buffer,
+            delegation_record,
+            delegation_metadata,
+            delegation_program,
+            permission_program,
+            system_program,
+            validator,
+            ..
             ] = accounts else {
             return Err(ProgramError::NotEnoughAccountKeys);
 

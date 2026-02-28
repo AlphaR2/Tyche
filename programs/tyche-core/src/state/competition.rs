@@ -29,20 +29,20 @@ pub struct CompetitionState {
   pub authority:            Address,
   pub asset_type:           u8,
   pub phase:                u8,
-  pub _padding:             [u8; 6], // 6 bytes — align next i64 to 8-byte boundary
+  pub _padding:             [u8; 6],
   pub start_time:           i64,
   pub end_time:             i64,
   pub soft_close_window:    i64,
   pub soft_close_extension: i64,
   pub soft_close_count:     u8,
   pub max_soft_closes:      u8,
-  pub _padding2:            [u8; 6], // 6 bytes — align next u64 to 8-byte boundary
+  pub _padding2:            [u8; 6], 
   pub reserve_price:        u64,
   pub participant_count:    u32,
   pub bump:                 u8,
-  pub _padding3:            [u8; 3], // offset 133→136: keeps final_amount at 8-byte aligned offset (168)
+  pub _padding3:            [u8; 3], 
   pub settlement_ref: Address,
-  pub duration_secs:        i64,  // stored at creation; used by ActivateCompetition to compute end_time
+  pub duration_secs:        i64,  
 }
 
 impl CompetitionState {

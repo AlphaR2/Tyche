@@ -1,8 +1,9 @@
 use bytemuck::{Pod, Zeroable};
+use shank::ShankType;
 
 /// Arguments for the `ActivateCompetition` instruction.
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Pod, Zeroable)]
+#[derive(Clone, Copy, Debug, Pod, Zeroable, ShankType)]
 pub struct ActivateCompetitionArgs {
     /// How often the PER auto-commits `CompetitionState` to mainnet during
     /// the active phase, in milliseconds.

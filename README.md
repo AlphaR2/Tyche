@@ -72,7 +72,7 @@ Tyche/
 |
 +-- app/                 Conceal Next.js frontend
 +-- tests/               Rust integration tests
-+-- idl/                 Shank-generated IDL JSON files
++-- clients/idls/         Shank-generated IDL JSON files (Codama-compatible)
 +-- docs/                Architecture, security, and integration documentation
 ```
 

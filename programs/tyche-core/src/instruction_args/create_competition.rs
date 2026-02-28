@@ -1,5 +1,6 @@
 use pinocchio::Address;
 use bytemuck::{Pod, Zeroable};
+use shank::ShankType;
 
 /// Arguments for the `CreateCompetition` instruction.
 ///
@@ -8,7 +9,7 @@ use bytemuck::{Pod, Zeroable};
 /// creator controls are passed here.
 
 #[repr(C)]
-#[derive(Clone, Copy, Debug, Pod, Zeroable)]
+#[derive(Clone, Copy, Debug, Pod, Zeroable, ShankType)]
 pub struct CreateCompetitionArgs {
     pub id:                   Address,  
     pub asset_type:           u8,       

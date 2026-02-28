@@ -2,9 +2,7 @@ use solana_sdk::{
     instruction::{AccountMeta, Instruction},
     pubkey::Pubkey,
 };
-
 use solana_system_interface::program::ID as system_program;
-
 use bytemuck::bytes_of;
 use pinocchio::Address;
 use tyche_common::seeds::COMPETITION_SEED;
@@ -12,20 +10,9 @@ use crate::{
     discriminator::CREATE_COMPETITION,
     instruction_args::create_competition::CreateCompetitionArgs,
 };
+use super::initialize_protocol_config::derive_protocol_config_pda;
 
 /// Derives the `CompetitionState` PDA for a given authority and competition id.
-///
-/// Seeds: `[COMPETITION_SEED, authority, id]`
-///
-/// Call this before `build_create_competition` to get the correct
-/// `competition` pubkey. The derived address is what the processor
-/// verifies against in step 6 of the handler.
-///
-/// # Example
-/// ```rust
-/// let (competition_pda, _bump) = derive_competition_pda(&authority, &id);
-/// let (ix, _) = build_create_competition(&authority, &payer, id, ...);
-/// ```
 pub fn derive_competition_pda(authority: &Pubkey, id: &[u8; 32]) -> (Pubkey, u8) {
     Pubkey::find_program_address(
         &[COMPETITION_SEED, authority.as_ref(), id.as_ref()],
@@ -35,20 +22,13 @@ pub fn derive_competition_pda(authority: &Pubkey, id: &[u8; 32]) -> (Pubkey, u8)
 
 /// Builds a `CreateCompetition` instruction.
 ///
-/// Derives the `CompetitionState` PDA automatically from `authority` and `id`.
-/// Returns the instruction and the derived competition pubkey so the caller
-/// can use the PDA address without deriving it a second time.
-///
-/// # Account order
-///
-/// Must match `CreateCompetitionAccounts::try_from` destructure exactly.
-///
-/// | # | Account        | Writable | Signer |
-/// |---|----------------|----------|--------|
-/// | 0 | competition    | yes      | no     |
-/// | 1 | authority      | no       | yes    |
-/// | 2 | payer          | yes      | yes    |
-/// | 3 | system_program | no       | no     |
+/// | # | Account         | Writable | Signer |
+/// |---|-----------------|----------|--------|
+/// | 0 | competition     | yes      | no     |
+/// | 1 | authority       | no       | yes    |
+/// | 2 | payer           | yes      | yes    |
+/// | 3 | system_program  | no       | no     |
+/// | 4 | protocol_config | no       | no     |
 pub fn build_create_competition(
     authority:            &Pubkey,
     payer:                &Pubkey,
@@ -61,8 +41,9 @@ pub fn build_create_competition(
     max_soft_closes:      u8,
     reserve_price:        u64,
 ) -> (Instruction, Pubkey) {
-    let program_id       = Pubkey::from(*crate::ID.as_array());
-    let (competition, _) = derive_competition_pda(authority, &id);
+    let program_id           = Pubkey::from(*crate::ID.as_array());
+    let (competition, _)     = derive_competition_pda(authority, &id);
+    let (protocol_config, _) = derive_protocol_config_pda();
 
     let args = CreateCompetitionArgs {
         id:                   Address::new_from_array(id),
@@ -87,6 +68,7 @@ pub fn build_create_competition(
             AccountMeta::new_readonly(*authority, true),
             AccountMeta::new(*payer, true),
             AccountMeta::new_readonly(system_program, false),
+            AccountMeta::new_readonly(protocol_config, false),
         ],
         data,
     };

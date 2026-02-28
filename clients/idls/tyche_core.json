@@ -1,0 +1,1129 @@
+{
+  "version": "0.1.0",
+  "name": "tyche_core",
+  "instructions": [
+    {
+      "name": "CreateCompetition",
+      "accounts": [
+        {
+          "name": "competition",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CompetitionState PDA. Seeds: [competition, authority, id]"
+          ]
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true,
+          "docs": [
+            "Creator and owner of this competition"
+          ]
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true,
+          "docs": [
+            "Funds rent for the CompetitionState account"
+          ]
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "Required for the CreateAccount CPI"
+          ]
+        },
+        {
+          "name": "protocolConfig",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "ProtocolConfig PDA (read-only) — validates reserve_price, duration, soft-close cap"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "createCompetitionArgs",
+          "type": {
+            "defined": "CreateCompetitionArgs"
+          }
+        }
+      ],
+      "discriminator": [
+        110,
+        212,
+        234,
+        212,
+        118,
+        128,
+        158,
+        244
+      ]
+    },
+    {
+      "name": "ActivateCompetition",
+      "accounts": [
+        {
+          "name": "competition",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CompetitionState PDA — delegated to PER after this instruction"
+          ]
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true,
+          "docs": [
+            "Must match state.authority"
+          ]
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true,
+          "docs": [
+            "Funds permission account creation; may equal authority"
+          ]
+        },
+        {
+          "name": "permission",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "MagicBlock ACL permission PDA for CompetitionState"
+          ]
+        },
+        {
+          "name": "delegationBuffer",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "MagicBlock delegation buffer PDA"
+          ]
+        },
+        {
+          "name": "delegationRecord",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "MagicBlock delegation record PDA"
+          ]
+        },
+        {
+          "name": "delegationMetadata",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "MagicBlock delegation metadata PDA"
+          ]
+        },
+        {
+          "name": "delegationProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "MagicBlock delegation program"
+          ]
+        },
+        {
+          "name": "permissionProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "MagicBlock ACL permission program"
+          ]
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "Required for permission account creation CPI"
+          ]
+        },
+        {
+          "name": "validator",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "MagicBlock validator that will host the PER session"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "activateCompetitionArgs",
+          "type": {
+            "defined": "ActivateCompetitionArgs"
+          }
+        }
+      ],
+      "discriminator": [
+        153,
+        105,
+        130,
+        88,
+        198,
+        208,
+        30,
+        118
+      ]
+    },
+    {
+      "name": "ExtendCompetition",
+      "accounts": [
+        {
+          "name": "competition",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CompetitionState PDA — currently delegated to PER"
+          ]
+        },
+        {
+          "name": "crank",
+          "isMut": false,
+          "isSigner": true,
+          "docs": [
+            "Protocol crank keypair — must equal config.crank_authority"
+          ]
+        },
+        {
+          "name": "magicContext",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "MagicBlock context account for commit_accounts CPI"
+          ]
+        },
+        {
+          "name": "magicProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "MagicBlock program"
+          ]
+        },
+        {
+          "name": "protocolConfig",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "ProtocolConfig PDA (read-only) — provides crank_authority"
+          ]
+        }
+      ],
+      "args": [],
+      "discriminator": [
+        9,
+        0,
+        18,
+        247,
+        115,
+        18,
+        176,
+        115
+      ]
+    },
+    {
+      "name": "CloseCompetition",
+      "accounts": [
+        {
+          "name": "competition",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CompetitionState PDA — currently delegated to PER"
+          ]
+        },
+        {
+          "name": "crank",
+          "isMut": false,
+          "isSigner": true,
+          "docs": [
+            "Protocol crank keypair — must equal config.crank_authority"
+          ]
+        },
+        {
+          "name": "permission",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "MagicBlock ACL permission PDA — undelegated alongside competition"
+          ]
+        },
+        {
+          "name": "magicContext",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "MagicBlock context account for commit_and_undelegate_accounts CPI"
+          ]
+        },
+        {
+          "name": "magicProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "MagicBlock program"
+          ]
+        },
+        {
+          "name": "protocolConfig",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "ProtocolConfig PDA (read-only) — provides crank_authority"
+          ]
+        }
+      ],
+      "args": [],
+      "discriminator": [
+        49,
+        166,
+        127,
+        67,
+        43,
+        108,
+        132,
+        96
+      ]
+    },
+    {
+      "name": "SettleCompetition",
+      "accounts": [
+        {
+          "name": "competition",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CompetitionState PDA — back on mainnet after undelegation"
+          ]
+        },
+        {
+          "name": "crank",
+          "isMut": false,
+          "isSigner": true,
+          "docs": [
+            "Protocol crank keypair — must equal config.crank_authority"
+          ]
+        },
+        {
+          "name": "delegationRecord",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "MagicBlock delegation record PDA — must have zero lamports"
+          ]
+        },
+        {
+          "name": "protocolConfig",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "ProtocolConfig PDA (read-only) — provides crank_authority"
+          ]
+        },
+        {
+          "name": "winnerParticipantRecord",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "ParticipantRecord PDA of the winner — IS_WINNER written when args.winner is non-zero"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "settleCompetitionArgs",
+          "type": {
+            "defined": "SettleCompetitionArgs"
+          }
+        }
+      ],
+      "discriminator": [
+        83,
+        121,
+        9,
+        141,
+        170,
+        133,
+        230,
+        151
+      ]
+    },
+    {
+      "name": "CancelCompetition",
+      "accounts": [
+        {
+          "name": "competition",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CompetitionState PDA"
+          ]
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true,
+          "docs": [
+            "Must match state.authority"
+          ]
+        },
+        {
+          "name": "permission",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "MagicBlock ACL permission PDA — undelegated on Active path"
+          ]
+        },
+        {
+          "name": "magicContext",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "MagicBlock context account — used on Active path only"
+          ]
+        },
+        {
+          "name": "magicProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "MagicBlock program — used on Active path only"
+          ]
+        }
+      ],
+      "args": [],
+      "discriminator": [
+        62,
+        4,
+        198,
+        98,
+        200,
+        41,
+        255,
+        72
+      ]
+    },
+    {
+      "name": "RegisterBid",
+      "accounts": [
+        {
+          "name": "competition",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CompetitionState PDA — participant_count incremented on first bid"
+          ]
+        },
+        {
+          "name": "participantRecord",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "ParticipantRecord PDA. Seeds: [participant, competition, bidder]"
+          ]
+        },
+        {
+          "name": "bidder",
+          "isMut": false,
+          "isSigner": true,
+          "docs": [
+            "The wallet placing the bid"
+          ]
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true,
+          "docs": [
+            "Funds rent for ParticipantRecord on first bid"
+          ]
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "Required for ParticipantRecord CreateAccount CPI on first bid"
+          ]
+        }
+      ],
+      "args": [],
+      "discriminator": [
+        26,
+        173,
+        93,
+        67,
+        171,
+        107,
+        118,
+        212
+      ]
+    },
+    {
+      "name": "InitializeProtocolConfig",
+      "accounts": [
+        {
+          "name": "protocolConfig",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "ProtocolConfig PDA. Seeds: [protocol_config]"
+          ]
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true,
+          "docs": [
+            "Becomes config.authority; controls future updates"
+          ]
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true,
+          "docs": [
+            "Funds rent for the ProtocolConfig account"
+          ]
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "Required for the CreateAccount CPI"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "initializeProtocolConfigArgs",
+          "type": {
+            "defined": "InitializeProtocolConfigArgs"
+          }
+        }
+      ],
+      "discriminator": [
+        28,
+        50,
+        43,
+        233,
+        244,
+        98,
+        123,
+        118
+      ]
+    },
+    {
+      "name": "UpdateProtocolConfig",
+      "accounts": [
+        {
+          "name": "protocolConfig",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "ProtocolConfig PDA — mutated in place"
+          ]
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true,
+          "docs": [
+            "Must match config.authority"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "updateProtocolConfigArgs",
+          "type": {
+            "defined": "UpdateProtocolConfigArgs"
+          }
+        }
+      ],
+      "discriminator": [
+        197,
+        97,
+        123,
+        54,
+        221,
+        168,
+        11,
+        135
+      ]
+    },
+    {
+      "name": "UpdateCrankAuthority",
+      "accounts": [
+        {
+          "name": "protocolConfig",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "ProtocolConfig PDA — crank_authority mutated in place"
+          ]
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true,
+          "docs": [
+            "Must match config.authority"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "updateCrankAuthorityArgs",
+          "type": {
+            "defined": "UpdateCrankAuthorityArgs"
+          }
+        }
+      ],
+      "discriminator": [
+        108,
+        25,
+        148,
+        152,
+        87,
+        11,
+        210,
+        84
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "CompetitionState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "discriminator",
+            "type": {
+              "array": [
+                "u8",
+                8
+              ]
+            }
+          },
+          {
+            "name": "id",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "authority",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "assetType",
+            "type": "u8"
+          },
+          {
+            "name": "phase",
+            "type": "u8"
+          },
+          {
+            "name": "padding",
+            "type": {
+              "array": [
+                "u8",
+                6
+              ]
+            }
+          },
+          {
+            "name": "startTime",
+            "type": "i64"
+          },
+          {
+            "name": "endTime",
+            "type": "i64"
+          },
+          {
+            "name": "softCloseWindow",
+            "type": "i64"
+          },
+          {
+            "name": "softCloseExtension",
+            "type": "i64"
+          },
+          {
+            "name": "softCloseCount",
+            "type": "u8"
+          },
+          {
+            "name": "maxSoftCloses",
+            "type": "u8"
+          },
+          {
+            "name": "padding2",
+            "type": {
+              "array": [
+                "u8",
+                6
+              ]
+            }
+          },
+          {
+            "name": "reservePrice",
+            "type": "u64"
+          },
+          {
+            "name": "participantCount",
+            "type": "u32"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "padding3",
+            "type": {
+              "array": [
+                "u8",
+                3
+              ]
+            }
+          },
+          {
+            "name": "settlementRef",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "durationSecs",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ParticipantRecord",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "discriminator",
+            "type": {
+              "array": [
+                "u8",
+                8
+              ]
+            }
+          },
+          {
+            "name": "competition",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "participant",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "isWinner",
+            "type": "u8"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "padding",
+            "type": {
+              "array": [
+                "u8",
+                6
+              ]
+            }
+          },
+          {
+            "name": "lastAction",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProtocolConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "discriminator",
+            "type": {
+              "array": [
+                "u8",
+                8
+              ]
+            }
+          },
+          {
+            "name": "authority",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "emergencyAuthority",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "treasury",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "crankAuthority",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "feeBasisPoints",
+            "type": "u16"
+          },
+          {
+            "name": "pad",
+            "type": {
+              "array": [
+                "u8",
+                2
+              ]
+            }
+          },
+          {
+            "name": "maxSoftClosesCap",
+            "type": "u8"
+          },
+          {
+            "name": "pad2",
+            "type": {
+              "array": [
+                "u8",
+                3
+              ]
+            }
+          },
+          {
+            "name": "minReservePrice",
+            "type": "u64"
+          },
+          {
+            "name": "minDurationSecs",
+            "type": "i64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "pad3",
+            "type": {
+              "array": [
+                "u8",
+                7
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "ActivateCompetitionArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "commitFrequencyMs",
+            "type": "u32"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CreateCompetitionArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "assetType",
+            "type": "u8"
+          },
+          {
+            "name": "pad",
+            "type": {
+              "array": [
+                "u8",
+                7
+              ]
+            }
+          },
+          {
+            "name": "startTime",
+            "type": "i64"
+          },
+          {
+            "name": "durationSecs",
+            "type": "i64"
+          },
+          {
+            "name": "softCloseWindow",
+            "type": "i64"
+          },
+          {
+            "name": "softCloseExtension",
+            "type": "i64"
+          },
+          {
+            "name": "maxSoftCloses",
+            "type": "u8"
+          },
+          {
+            "name": "pad2",
+            "type": {
+              "array": [
+                "u8",
+                7
+              ]
+            }
+          },
+          {
+            "name": "reservePrice",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "InitializeProtocolConfigArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "emergencyAuthority",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "treasury",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "crankAuthority",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "feeBasisPoints",
+            "type": "u16"
+          },
+          {
+            "name": "pad",
+            "type": {
+              "array": [
+                "u8",
+                2
+              ]
+            }
+          },
+          {
+            "name": "maxSoftClosesCap",
+            "type": "u8"
+          },
+          {
+            "name": "pad2",
+            "type": {
+              "array": [
+                "u8",
+                3
+              ]
+            }
+          },
+          {
+            "name": "minReservePrice",
+            "type": "u64"
+          },
+          {
+            "name": "minDurationSecs",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SettleCompetitionArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "settlementRef",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "winner",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "UpdateCrankAuthorityArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "newCrankAuthority",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "UpdateProtocolConfigArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "newTreasury",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "newFeeBasisPoints",
+            "type": "u16"
+          },
+          {
+            "name": "newMaxSoftClosesCap",
+            "type": "u8"
+          },
+          {
+            "name": "pad",
+            "type": {
+              "array": [
+                "u8",
+                5
+              ]
+            }
+          },
+          {
+            "name": "newMinReservePrice",
+            "type": "u64"
+          },
+          {
+            "name": "newMinDurationSecs",
+            "type": "i64"
+          }
+        ]
+      }
+    }
+  ],
+  "metadata": {
+    "origin": "shank",
+    "address": "TYCANGQk6tumtij3tHwsRPSNkSHU3KGSNxNG59qJrHx"
+  }
+}

@@ -1,14 +1,10 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+pub mod helpers;
 
 #[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+mod tyche_core;
+#[cfg(test)]
+mod tyche_escrow;
+#[cfg(test)]
+mod tyche_auction;
+#[cfg(test)]
+mod integration;

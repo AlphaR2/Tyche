@@ -6,6 +6,7 @@ use crate::{
     discriminator::{
         CREATE_COMPETITION, ACTIVATE_COMPETITION, EXTEND_COMPETITION,
         CLOSE_COMPETITION,  SETTLE_COMPETITION,  CANCEL_COMPETITION, REGISTER_BID,
+        INITIALIZE_PROTOCOL_CONFIG, UPDATE_PROTOCOL_CONFIG, UPDATE_CRANK_AUTHORITY,
     },
     processor::{
         activate::ActivateCompetitionInstruction,
@@ -13,8 +14,11 @@ use crate::{
         close::CloseCompetitionInstruction,
         create::CreateCompetitionInstruction,
         extend::ExtendCompetitionInstruction,
+        initialize_protocol_config::InitializeProtocolConfigInstruction,
         register_bid::RegisterBidInstruction,
         settle::SettleCompetitionInstruction,
+        update_crank_authority::UpdateCrankAuthorityInstruction,
+        update_protocol_config::UpdateProtocolConfigInstruction,
     },
 };
 
@@ -74,6 +78,15 @@ pub fn process_instruction(
 
         d if d == REGISTER_BID =>
             RegisterBidInstruction::try_from((accounts, args))?.handler(),
+
+        d if d == INITIALIZE_PROTOCOL_CONFIG =>
+            InitializeProtocolConfigInstruction::try_from((accounts, args))?.handler(),
+
+        d if d == UPDATE_PROTOCOL_CONFIG =>
+            UpdateProtocolConfigInstruction::try_from((accounts, args))?.handler(),
+
+        d if d == UPDATE_CRANK_AUTHORITY =>
+            UpdateCrankAuthorityInstruction::try_from((accounts, args))?.handler(),
 
         _ => Err(ProgramError::InvalidInstructionData),
     }

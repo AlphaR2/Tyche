@@ -1,7 +1,7 @@
 [package]
 name        = "tyche-escrow"
 version     = "0.1.0"
-description = "Tyche protocol SOL custody. Per-bidder EscrowVault PDAs, fund release, and refund logic."
+description = "Tyche protocol SOL custody(SPL later). Per-bidder EscrowVault PDAs, fund release, and refund logic."
 edition     = "2021"
 
 [lib]
@@ -16,15 +16,17 @@ default       = []
 
 [dependencies]
 tyche-common     = { workspace = true }
+tyche-core       = { workspace = true }
 pinocchio        = { workspace = true }
-pinocchio-log    = { workspace = true }
-pinocchio-pubkey = { workspace = true }
 pinocchio-system = { workspace = true }
 bytemuck         = { workspace = true }
-num_enum         = { workspace = true }
+shank            = { workspace = true }
 
-[dev-dependencies]
-shank = { workspace = true }
+# Off-chain only — instruction builders and SDK helpers.
+# Not pulled in when compiling for the SBF target.
+[target.'cfg(not(target_os = "solana"))'.dependencies]
+solana-sdk              = { workspace = true }
+solana-system-interface = { workspace = true }
 
 [lints]
 workspace = true

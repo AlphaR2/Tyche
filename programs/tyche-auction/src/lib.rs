@@ -1,14 +1,25 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+#![cfg_attr(target_os = "solana", no_std)]
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+use pinocchio::address;
+use pinocchio::program_entrypoint;
+#[cfg(target_os = "solana")]
+use pinocchio::no_allocator;
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+pub mod args;
+pub mod discriminator;
+pub mod entrypoint;
+pub mod error;
+pub mod instructions;
+
+#[cfg(not(target_os = "solana"))]
+pub mod instruction_builder;
+pub mod processor;
+pub mod state;
+
+address::declare_id!("TYAKZZsLmYU65ScdqSGz6GxXs9KaUKF8sCFU52qmNTG");
+
+#[cfg(not(feature = "no-entrypoint"))]
+program_entrypoint!(crate::entrypoint::process_instruction);
+
+#[cfg(all(target_os = "solana", not(feature = "no-entrypoint")))]
+no_allocator!();

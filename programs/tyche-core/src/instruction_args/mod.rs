@@ -3,5 +3,8 @@ pub mod cancel;
 pub mod close;
 pub mod create_competition;
 pub mod extend;
+pub mod initialize_protocol_config;
 pub mod register_bid;
 pub mod settle;
+pub mod update_crank_authority;
+pub mod update_protocol_config;

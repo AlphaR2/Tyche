@@ -1,0 +1,647 @@
+{
+  "version": "0.1.0",
+  "name": "tyche_auction",
+  "instructions": [
+    {
+      "name": "CreateAuction",
+      "accounts": [
+        {
+          "name": "auctionState",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "AuctionState PDA being created"
+          ]
+        },
+        {
+          "name": "competition",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "CompetitionState PDA"
+          ]
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true,
+          "docs": [
+            "Competition authority"
+          ]
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true,
+          "docs": [
+            "Payer for rent"
+          ]
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "System program"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "createAuctionArgs",
+          "type": {
+            "defined": "CreateAuctionArgs"
+          }
+        }
+      ],
+      "discriminator": [
+        234,
+        6,
+        201,
+        246,
+        47,
+        219,
+        176,
+        107
+      ]
+    },
+    {
+      "name": "ActivateAuction",
+      "accounts": [
+        {
+          "name": "auctionState",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "AuctionState PDA"
+          ]
+        },
+        {
+          "name": "competition",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "CompetitionState PDA"
+          ]
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true,
+          "docs": [
+            "Competition authority"
+          ]
+        },
+        {
+          "name": "buffer",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "Delegation buffer"
+          ]
+        },
+        {
+          "name": "delegationRecord",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "Delegation record"
+          ]
+        },
+        {
+          "name": "delegationMetadata",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "Delegation metadata"
+          ]
+        },
+        {
+          "name": "delegationProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "MagicBlock delegation program"
+          ]
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "System program"
+          ]
+        },
+        {
+          "name": "validator",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "TEE Validator Node"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "activateAuctionArgs",
+          "type": {
+            "defined": "ActivateAuctionArgs"
+          }
+        }
+      ],
+      "discriminator": [
+        212,
+        24,
+        210,
+        7,
+        183,
+        147,
+        66,
+        109
+      ]
+    },
+    {
+      "name": "PlaceBid",
+      "accounts": [
+        {
+          "name": "auctionState",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "AuctionState PDA"
+          ]
+        },
+        {
+          "name": "competition",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CompetitionState PDA"
+          ]
+        },
+        {
+          "name": "bidRecord",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "BidRecord PDA"
+          ]
+        },
+        {
+          "name": "vault",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "EscrowVault PDA"
+          ]
+        },
+        {
+          "name": "bidder",
+          "isMut": false,
+          "isSigner": true,
+          "docs": [
+            "Bidder"
+          ]
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true,
+          "docs": [
+            "Payer"
+          ]
+        },
+        {
+          "name": "tycheCoreProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "tyche-core program"
+          ]
+        },
+        {
+          "name": "competitionParticipantRecord",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "ParticipantRecord PDA"
+          ]
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "System program"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "placeBidArgs",
+          "type": {
+            "defined": "PlaceBidArgs"
+          }
+        }
+      ],
+      "discriminator": [
+        238,
+        77,
+        148,
+        91,
+        200,
+        151,
+        92,
+        146
+      ]
+    },
+    {
+      "name": "FinalizeAuction",
+      "accounts": [
+        {
+          "name": "auctionState",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "AuctionState PDA"
+          ]
+        },
+        {
+          "name": "competition",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "CompetitionState PDA"
+          ]
+        },
+        {
+          "name": "winnerParticipant",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "ParticipantRecord PDA for winner"
+          ]
+        },
+        {
+          "name": "crank",
+          "isMut": false,
+          "isSigner": true,
+          "docs": [
+            "Crank authority"
+          ]
+        },
+        {
+          "name": "protocolConfig",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "ProtocolConfig PDA"
+          ]
+        },
+        {
+          "name": "tycheCoreProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "tyche-core program"
+          ]
+        },
+        {
+          "name": "delegationRecord",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "MagicBlock delegation record PDA — forwarded to SettleCompetition"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "finalizeAuctionArgs",
+          "type": {
+            "defined": "FinalizeAuctionArgs"
+          }
+        }
+      ],
+      "discriminator": [
+        220,
+        209,
+        175,
+        193,
+        57,
+        132,
+        241,
+        168
+      ]
+    },
+    {
+      "name": "CancelAuction",
+      "accounts": [
+        {
+          "name": "auctionState",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "AuctionState PDA"
+          ]
+        },
+        {
+          "name": "competition",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "CompetitionState PDA"
+          ]
+        },
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true,
+          "docs": [
+            "Competition authority"
+          ]
+        },
+        {
+          "name": "rentRecipient",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "Rent recipient"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "cancelAuctionArgs",
+          "type": {
+            "defined": "CancelAuctionArgs"
+          }
+        }
+      ],
+      "discriminator": [
+        156,
+        43,
+        197,
+        110,
+        218,
+        105,
+        143,
+        182
+      ]
+    },
+    {
+      "name": "CloseBidRecord",
+      "accounts": [
+        {
+          "name": "bidRecord",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "BidRecord PDA"
+          ]
+        },
+        {
+          "name": "competition",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "CompetitionState PDA"
+          ]
+        },
+        {
+          "name": "bidder",
+          "isMut": true,
+          "isSigner": true,
+          "docs": [
+            "Bidder"
+          ]
+        },
+        {
+          "name": "callerProgram",
+          "isMut": false,
+          "isSigner": true,
+          "docs": [
+            "escrow program CPI caller"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "closeBidRecordArgs",
+          "type": {
+            "defined": "CloseBidRecordArgs"
+          }
+        }
+      ],
+      "discriminator": [
+        191,
+        178,
+        243,
+        199,
+        31,
+        166,
+        172,
+        200
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "AuctionState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "discriminator",
+            "type": {
+              "array": [
+                "u8",
+                8
+              ]
+            }
+          },
+          {
+            "name": "competition",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "authority",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "assetMint",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "minBidIncrement",
+            "type": "u64"
+          },
+          {
+            "name": "currentHighBid",
+            "type": "u64"
+          },
+          {
+            "name": "currentWinner",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "bidCount",
+            "type": "u32"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "pad",
+            "type": {
+              "array": [
+                "u8",
+                3
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "BidRecord",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "discriminator",
+            "type": {
+              "array": [
+                "u8",
+                8
+              ]
+            }
+          },
+          {
+            "name": "competition",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "bidder",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "pad",
+            "type": {
+              "array": [
+                "u8",
+                7
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "ActivateAuctionArgs",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
+      "name": "CancelAuctionArgs",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
+      "name": "CloseBidRecordArgs",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
+      "name": "CreateAuctionArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "assetMint",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "minBidIncrement",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "FinalizeAuctionArgs",
+      "type": {
+        "kind": "struct",
+        "fields": []
+      }
+    },
+    {
+      "name": "PlaceBidArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "amount",
+            "type": "u64"
+          }
+        ]
+      }
+    }
+  ],
+  "metadata": {
+    "origin": "shank",
+    "address": "TYAKZZsLmYU65ScdqSGz6GxXs9KaUKF8sCFU52qmNTG"
+  }
+}

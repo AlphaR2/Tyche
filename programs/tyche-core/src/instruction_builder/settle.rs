@@ -8,29 +8,35 @@ use crate::{
     discriminator::SETTLE_COMPETITION,
     instruction_args::settle::SettleCompetitionArgs,
 };
+use super::initialize_protocol_config::derive_protocol_config_pda;
 
 /// Builds a `SettleCompetition` instruction.
 ///
-/// Called by the protocol crank after undelegation completes (i.e.
-/// `delegation_record` lamports == 0). Writes `settlement_ref` — the pubkey of the
-/// vertical's result account — and transitions `CompetitionState` to `Settled`.
+/// | # | Account                  | Writable | Signer |
+/// |---|--------------------------|----------|--------|
+/// | 0 | competition              | yes      | no     |
+/// | 1 | crank                    | no       | yes    |
+/// | 2 | delegation_record        | no       | no     |
+/// | 3 | protocol_config          | no       | no     |
+/// | 4 | winner_participant_record | yes      | no     |
 ///
-/// Only the protocol crank (`TYCHE_CRANK_PUBKEY`) may sign this instruction.
-///
-/// # Accounts
-/// 0. `competition`      — writable (back on mainnet after undelegation)
-/// 1. `crank`            — readonly signer (protocol crank only)
-/// 2. `delegation_record`— readonly (must have zero lamports — proves undelegation complete)
+/// Pass `winner = [0u8; 32]` when there is no winner.
+/// When `winner` is non-zero tyche-core writes `IS_WINNER` to
+/// `winner_participant_record` on behalf of the calling vertical.
 pub fn build_settle_competition(
-    competition:      &Pubkey,
-    crank:            &Pubkey,
-    delegation_record: &Pubkey,
-    settlement_ref:   [u8; 32],
+    competition:               &Pubkey,
+    crank:                     &Pubkey,
+    delegation_record:         &Pubkey,
+    winner_participant_record: &Pubkey,
+    settlement_ref:            [u8; 32],
+    winner:                    [u8; 32],
 ) -> Instruction {
-    let program_id = Pubkey::from(*crate::ID.as_array());
+    let program_id           = Pubkey::from(*crate::ID.as_array());
+    let (protocol_config, _) = derive_protocol_config_pda();
 
     let args = SettleCompetitionArgs {
         settlement_ref: Address::new_from_array(settlement_ref),
+        winner:         Address::new_from_array(winner),
     };
 
     let mut data = SETTLE_COMPETITION.to_vec();
@@ -42,6 +48,8 @@ pub fn build_settle_competition(
             AccountMeta::new(*competition, false),
             AccountMeta::new_readonly(*crank, true),
             AccountMeta::new_readonly(*delegation_record, false),
+            AccountMeta::new_readonly(protocol_config, false),
+            AccountMeta::new(*winner_participant_record, false),
         ],
         data,
     }

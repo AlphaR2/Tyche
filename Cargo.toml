@@ -5,7 +5,6 @@ members = [
     "programs/tyche-escrow",
     "programs/tyche-auction",
     "crates/tyche-common",
-    "crates/tyche-cpi",
     "tests",
 ]
 

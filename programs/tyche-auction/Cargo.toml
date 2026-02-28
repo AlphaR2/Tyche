@@ -1,7 +1,7 @@
 [package]
 name        = "tyche-auction"
 version     = "0.1.0"
-description = "Tyche auction consumer. Asset escrow, sealed PlaceBid inside CEE, winner asset transfer."
+description = "Tyche protocol auction vertical. Sealed-bid English auction on top of the CEE lifecycle."
 edition     = "2021"
 
 [lib]
@@ -10,22 +10,25 @@ name       = "tyche_auction"
 
 [features]
 # Disables the program entrypoint so this crate can be linked as a library.
-# Required when used as a dependency in tyche-cpi or the test suite.
+# Required when used as a dependency in the test suite.
 no-entrypoint = []
 default       = []
 
 [dependencies]
-tyche-common     = { workspace = true }
-pinocchio        = { workspace = true }
-pinocchio-log    = { workspace = true }
-pinocchio-pubkey = { workspace = true }
-pinocchio-system = { workspace = true }
-pinocchio-token  = { workspace = true }
-bytemuck         = { workspace = true }
-num_enum         = { workspace = true }
+tyche-common                = { workspace = true }
+tyche-core                  = { workspace = true, features = ["no-entrypoint"] }
+tyche-escrow                = { workspace = true, features = ["no-entrypoint"] }
+pinocchio                   = { workspace = true }
+pinocchio-system            = { workspace = true }
+bytemuck                    = { workspace = true }
+num_enum                    = { workspace = true }
+shank                       = { workspace = true }
+ephemeral-rollups-pinocchio = { workspace = true }
 
-[dev-dependencies]
-shank = { workspace = true }
+# Off-chain only — instruction builders use solana_sdk types.
+[target.'cfg(not(target_os = "solana"))'.dependencies]
+solana-sdk              = { workspace = true }
+solana-system-interface = { workspace = true }
 
 [lints]
 workspace = true

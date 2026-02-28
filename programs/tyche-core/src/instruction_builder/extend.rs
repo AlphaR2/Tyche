@@ -3,27 +3,25 @@ use solana_sdk::{
     pubkey::Pubkey,
 };
 use crate::discriminator::EXTEND_COMPETITION;
+use super::initialize_protocol_config::derive_protocol_config_pda;
 
 /// Builds an `ExtendCompetition` instruction.
 ///
-/// Called by the protocol crank when a bid lands within the soft-close window.
-/// Increments `end_time` by `soft_close_extension` and commits the updated state
-/// to mainnet immediately via `commit_accounts`.
-///
-/// Only the protocol crank (`TYCHE_CRANK_PUBKEY`) may sign this instruction.
-///
-/// # Accounts
-/// 0. `competition`  — writable (delegated to PER)
-/// 1. `crank`        — readonly signer (protocol crank only)
-/// 2. `magic_context`— writable (MagicBlock PER context)
-/// 3. `magic_program`— readonly (MagicBlock program)
+/// | # | Account         | Writable | Signer |
+/// |---|-----------------|----------|--------|
+/// | 0 | competition     | yes      | no     |
+/// | 1 | crank           | no       | yes    |
+/// | 2 | magic_context   | yes      | no     |
+/// | 3 | magic_program   | no       | no     |
+/// | 4 | protocol_config | no       | no     |
 pub fn build_extend_competition(
-    competition:  &Pubkey,
-    crank:        &Pubkey,
+    competition:   &Pubkey,
+    crank:         &Pubkey,
     magic_context: &Pubkey,
     magic_program: &Pubkey,
 ) -> Instruction {
-    let program_id = Pubkey::from(*crate::ID.as_array());
+    let program_id           = Pubkey::from(*crate::ID.as_array());
+    let (protocol_config, _) = derive_protocol_config_pda();
 
     Instruction {
         program_id,
@@ -32,6 +30,7 @@ pub fn build_extend_competition(
             AccountMeta::new_readonly(*crank, true),
             AccountMeta::new(*magic_context, false),
             AccountMeta::new_readonly(*magic_program, false),
+            AccountMeta::new_readonly(protocol_config, false),
         ],
         data: EXTEND_COMPETITION.to_vec(),
     }

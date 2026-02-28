@@ -33,16 +33,13 @@ pub struct RegisterBidAccounts<'a> {
     pub bidder:             &'a AccountView,
     pub payer:              &'a AccountView,
     pub system_program:     &'a AccountView,
-    /// The vertical program invoking this instruction via CPI.
-    /// Must sign — CPI signer propagation proves it authorized this call.
-    pub caller_program:     &'a AccountView,
 }
 
 impl<'a> TryFrom<&'a [AccountView]> for RegisterBidAccounts<'a> {
     type Error = ProgramError;
 
     fn try_from(accounts: &'a [AccountView]) -> Result<Self, Self::Error> {
-        let [competition, participant_record, bidder, payer, system_program, caller_program, ..] = accounts else {
+        let [competition, participant_record, bidder, payer, system_program, ..] = accounts else {
             return Err(ProgramError::NotEnoughAccountKeys);
         };
 
@@ -69,20 +66,12 @@ impl<'a> TryFrom<&'a [AccountView]> for RegisterBidAccounts<'a> {
             return Err(ProgramError::InvalidAccountData);
         }
 
-        // caller_program must sign — CPI signer propagation proves the vertical
-        // program authorized this call. Full authorized-verticals whitelist check
-        // (TYCHE_AUCTION_PUBKEY etc.) added post-hackathon.
-        if !caller_program.is_signer() {
-            return Err(TycheCoreError::UnauthorizedCaller.into());
-        }
-
         Ok(Self {
             competition,
             participant_record,
             bidder,
             payer,
             system_program,
-            caller_program,
         })
     }
 }

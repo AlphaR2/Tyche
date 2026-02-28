@@ -14,8 +14,12 @@ fn main() {
     println!("pub const SETTLE_COMPETITION:   [u8; 8] = {:?};", discriminator("global:settle_competition"));
     println!("pub const CANCEL_COMPETITION:   [u8; 8] = {:?};", discriminator("global:cancel_competition"));
     println!("pub const REGISTER_BID:         [u8; 8] = {:?};", discriminator("global:register_bid"));
+    println!("pub const INITIALIZE_PROTOCOL_CONFIG: [u8; 8] = {:?};", discriminator("global:initialize_protocol_config"));
+    println!("pub const UPDATE_PROTOCOL_CONFIG:     [u8; 8] = {:?};", discriminator("global:update_protocol_config"));
+    println!("pub const UPDATE_CRANK_AUTHORITY:     [u8; 8] = {:?};", discriminator("global:update_crank_authority"));
     println!();
     println!("// ── Account discriminators ───────────────────────────────────────────────────");
     println!("pub const COMPETITION_STATE:    [u8; 8] = {:?};", discriminator("account:CompetitionState"));
     println!("pub const PARTICIPANT_RECORD:   [u8; 8] = {:?};", discriminator("account:ParticipantRecord"));
+    println!("pub const PROTOCOL_CONFIG:      [u8; 8] = {:?};", discriminator("account:ProtocolConfig"));
 }

@@ -20,8 +20,7 @@ pub fn derive_participant_record_pda(competition: &Pubkey, bidder: &Pubkey) -> (
 /// Builds a `RegisterBid` instruction.
 ///
 /// Intended to be called by vertical programs (e.g. `tyche-auction`) via CPI
-/// from their `PlaceBid` instruction. `caller_program` must sign — CPI signer
-/// propagation proves the vertical authorized this call.
+/// from their `PlaceBid` instruction.
 ///
 /// On the bidder's first bid this creates a `ParticipantRecord` PDA and
 /// increments `CompetitionState::participant_count`. On repeat bids it updates
@@ -36,15 +35,13 @@ pub fn derive_participant_record_pda(competition: &Pubkey, bidder: &Pubkey) -> (
 /// 2. `bidder`            — readonly signer
 /// 3. `payer`             — writable signer (funds rent on first bid)
 /// 4. `system_program`    — readonly
-/// 5. `caller_program`    — readonly signer (CPI caller — proves vertical authorized the call)
 pub fn build_register_bid(
-    competition:    &Pubkey,
-    bidder:         &Pubkey,
-    payer:          &Pubkey,
-    caller_program: &Pubkey,
+    competition: &Pubkey,
+    bidder:      &Pubkey,
+    payer:       &Pubkey,
 ) -> (Instruction, Pubkey) {
-    let program_id                = Pubkey::from(*crate::ID.as_array());
-    let (participant_record, _)   = derive_participant_record_pda(competition, bidder);
+    let program_id              = Pubkey::from(*crate::ID.as_array());
+    let (participant_record, _) = derive_participant_record_pda(competition, bidder);
 
     let ix = Instruction {
         program_id,
@@ -54,7 +51,6 @@ pub fn build_register_bid(
             AccountMeta::new_readonly(*bidder, true),
             AccountMeta::new(*payer, true),
             AccountMeta::new_readonly(system_program, false),
-            AccountMeta::new_readonly(*caller_program, true),
         ],
         data: REGISTER_BID.to_vec(),
     };

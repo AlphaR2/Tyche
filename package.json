@@ -1,0 +1,18 @@
+{
+  "name": "tyche",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "generate": "shank idl --crate-root programs/tyche-core --out-dir clients/idls && shank idl --crate-root programs/tyche-escrow --out-dir clients/idls && shank idl --crate-root programs/tyche-auction --out-dir clients/idls && ts-node scripts/fix-idls.ts && ts-node scripts/codama.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.0"
+  },
+  "dependencies": {
+    "@codama/nodes-from-anchor": "^1.3.9",
+    "@codama/renderers-js": "^2.0.3",
+    "codama": "^1.5.1"
+  }
+}

@@ -1,3 +1,39 @@
+# ── Rust build artifacts ─────────────────────────────────────────────────────
 /target
+programs/tyche-core/target
+programs/tyche-escrow/target
+programs/tyche-auction/target
+
+# ── Node / npm ────────────────────────────────────────────────────────────────
+node_modules/
+dist/
+*.js.map
+
+# ── Environment & secrets ─────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ── Solana keypairs / wallets — NEVER commit private keys ────────────────────
+*.keypair.json
+*-keypair.json
+deploy-keypair.json
+wallet.json
+wallet*.json
+id.json
+*.key
+*.pem
+
+# ── Editor / OS ───────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.vscode/settings.json
+.idea/
+
+# ── Logs ──────────────────────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+
+# ── Claude Code internal files ────────────────────────────────────────────────
 SKILL.md
 /.claude

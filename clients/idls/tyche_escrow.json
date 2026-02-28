@@ -1,0 +1,269 @@
+{
+  "version": "0.1.0",
+  "name": "tyche_escrow",
+  "instructions": [
+    {
+      "name": "Deposit",
+      "accounts": [
+        {
+          "name": "vault",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "EscrowVault PDA. Seeds: [vault, competition, depositor]"
+          ]
+        },
+        {
+          "name": "depositor",
+          "isMut": true,
+          "isSigner": true,
+          "docs": [
+            "Bidder — pays the bid amount; vault owner"
+          ]
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true,
+          "docs": [
+            "Funds vault rent on first deposit; may equal depositor"
+          ]
+        },
+        {
+          "name": "competition",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "CompetitionState PDA (read-only) — phase verified as Active"
+          ]
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "Required for CreateAccount and Transfer CPIs"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "depositArgs",
+          "type": {
+            "defined": "DepositArgs"
+          }
+        }
+      ],
+      "discriminator": [
+        242,
+        35,
+        198,
+        137,
+        82,
+        225,
+        242,
+        182
+      ]
+    },
+    {
+      "name": "Release",
+      "accounts": [
+        {
+          "name": "vault",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "EscrowVault PDA — drained and closed by this instruction"
+          ]
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "Competition authority — receives net bid amount after protocol fee"
+          ]
+        },
+        {
+          "name": "depositor",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "Original depositor — receives excess collateral and rent reserve back"
+          ]
+        },
+        {
+          "name": "crank",
+          "isMut": false,
+          "isSigner": true,
+          "docs": [
+            "Protocol crank keypair — must equal config.crank_authority"
+          ]
+        },
+        {
+          "name": "competition",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "CompetitionState PDA (read-only) — phase verified as Settled"
+          ]
+        },
+        {
+          "name": "participantRecord",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "ParticipantRecord PDA (read-only) — is_winner verified as IS_WINNER"
+          ]
+        },
+        {
+          "name": "protocolConfig",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "ProtocolConfig PDA (read-only) — provides fee_basis_points, crank_authority, treasury"
+          ]
+        },
+        {
+          "name": "treasury",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "Protocol treasury — receives the protocol fee; must match config.treasury"
+          ]
+        }
+      ],
+      "args": [],
+      "discriminator": [
+        253,
+        249,
+        15,
+        206,
+        28,
+        127,
+        193,
+        241
+      ]
+    },
+    {
+      "name": "Refund",
+      "accounts": [
+        {
+          "name": "vault",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "EscrowVault PDA — drained and closed by this instruction"
+          ]
+        },
+        {
+          "name": "depositor",
+          "isMut": true,
+          "isSigner": true,
+          "docs": [
+            "Original depositor — receives all lamports back"
+          ]
+        },
+        {
+          "name": "competition",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "CompetitionState PDA (read-only) — phase verified as Cancelled or Settled"
+          ]
+        },
+        {
+          "name": "participantRecord",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "ParticipantRecord PDA (read-only) — is_winner checked on Settled path; ignored on Cancelled path"
+          ]
+        }
+      ],
+      "args": [],
+      "discriminator": [
+        2,
+        96,
+        183,
+        251,
+        63,
+        208,
+        46,
+        46
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "EscrowVault",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "discriminator",
+            "type": {
+              "array": [
+                "u8",
+                8
+              ]
+            }
+          },
+          {
+            "name": "competition",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "depositor",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "pad",
+            "type": {
+              "array": [
+                "u8",
+                7
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "DepositArgs",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "amount",
+            "type": "u64"
+          }
+        ]
+      }
+    }
+  ],
+  "metadata": {
+    "origin": "shank",
+    "address": "TYEhGGkbujScDqPK1KTKCRu9cjVzjBH2Yf9Jb5L5Xtk"
+  }
+}

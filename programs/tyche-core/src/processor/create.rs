@@ -8,52 +8,50 @@ use pinocchio_system::instructions::CreateAccount;
 use tyche_common::{
     asset_type::AssetType,
     phase::Phase,
-    constants::MIN_RESERVE_PRICE_LAMPORTS,
     seeds::COMPETITION_SEED,
 };
 use num_enum::TryFromPrimitive;
 use crate::{
     instruction_args::create_competition::CreateCompetitionArgs,
-    discriminator::COMPETITION_STATE,
+    discriminator::{COMPETITION_STATE, PROTOCOL_CONFIG},
     error::TycheCoreError,
-    state::competition::CompetitionState,
+    state::{
+        competition::CompetitionState,
+        protocol_config::ProtocolConfig,
+    },
 };
 
 /// Validated account context for `CreateCompetition`.
     pub struct CreateCompetitionAccounts<'a> {
-    pub competition:    &'a AccountView,
-    pub authority:      &'a AccountView,
-    pub payer:          &'a AccountView,
-    pub system_program: &'a AccountView,
+    pub competition:     &'a AccountView,
+    pub authority:       &'a AccountView,
+    pub payer:           &'a AccountView,
+    pub system_program:  &'a AccountView,
+    pub protocol_config: &'a AccountView,
     }
 
     impl<'a> TryFrom<&'a [AccountView]> for CreateCompetitionAccounts<'a> {
     type Error = ProgramError;
 
     fn try_from(accounts: &'a [AccountView]) -> Result<Self, Self::Error> {
-        let [competition, authority, payer, system_program, ..] = accounts else {
+        let [competition, authority, payer, system_program, protocol_config, ..] = accounts else {
             return Err(ProgramError::NotEnoughAccountKeys);
         };
 
-        // competition must be writable and not yet initialized
         if !competition.is_writable() {
             return Err(ProgramError::InvalidAccountData);
         }
         if !competition.is_data_empty() {
             return Err(ProgramError::AccountAlreadyInitialized);
         }
-
-        // authority must sign — they own this competition
         if !authority.is_signer() {
             return Err(ProgramError::MissingRequiredSignature);
         }
-
-        // payer must sign — they fund the rent
         if !payer.is_signer() {
             return Err(ProgramError::MissingRequiredSignature);
         }
 
-        Ok(Self { competition, authority, payer, system_program })
+        Ok(Self { competition, authority, payer, system_program, protocol_config })
     }
 }
 
@@ -79,37 +77,49 @@ impl<'a> CreateCompetitionInstruction<'a> {
         let args     = self.args;
 
         // 1: Validate asset_type is a known variant.
-        // Rejects any u8 that does not map to a defined AssetType.
         AssetType::try_from_primitive(args.asset_type)
             .map_err(|_| TycheCoreError::InvalidAccountData)?;
 
-        // 2: Validate reserve_price meets the protocol minimum.
-        // Zero or dust reserves would accept any bid.
-        if args.reserve_price < MIN_RESERVE_PRICE_LAMPORTS {
+        // 2: Read ProtocolConfig — validate reserve_price, duration, soft-close cap.
+        let (min_reserve_price, min_duration_secs, max_soft_closes_cap) = {
+            let data   = accounts.protocol_config.try_borrow()?;
+            let config = bytemuck::try_from_bytes::<ProtocolConfig>(&*data)
+                .map_err(|_| ProgramError::InvalidAccountData)?;
+
+            if config.discriminator != PROTOCOL_CONFIG {
+                return Err(TycheCoreError::InvalidDiscriminator.into());
+            }
+
+            (config.min_reserve_price, config.min_duration_secs, config.max_soft_closes_cap)
+        };
+
+        // 3: Validate reserve_price meets the protocol minimum.
+        if args.reserve_price < min_reserve_price {
             return Err(TycheCoreError::InvalidAccountData.into());
         }
 
-        // 3: Validate duration is positive.
-        // Non-positive duration means end_time <= activation time — immediately closeable.
-        if args.duration_secs <= 0 {
+        // 4: Validate duration meets the protocol minimum.
+        if args.duration_secs < min_duration_secs {
             return Err(TycheCoreError::InvalidAccountData.into());
         }
 
-        // 4: Validate soft-close params are non-negative.
-        // max_soft_closes == 0 is valid — disables soft-close for prediction markets / batches.
+        // 5: Validate soft-close params are non-negative.
         if args.soft_close_window < 0 || args.soft_close_extension < 0 {
             return Err(TycheCoreError::InvalidAccountData.into());
         }
 
-        // 5: Validate start_time is not already in the past.
-        // Stale timestamps are a footgun — reject early.
+        // 6: Validate max_soft_closes does not exceed the protocol cap.
+        if args.max_soft_closes > max_soft_closes_cap {
+            return Err(TycheCoreError::InvalidAccountData.into());
+        }
+
+        // 7: Validate start_time is not already in the past.
         let clock = Clock::get()?;
         if args.start_time < clock.unix_timestamp {
             return Err(TycheCoreError::AuctionNotStarted.into());
         }
 
-        // 6: Derive competition PDA and verify the provided account matches.
-        // Canonical bump is stored on state so processors never call find again.
+        // 8: Derive competition PDA and verify the provided account matches.
         let authority_bytes = accounts.authority.address().as_array();
         let id_bytes        = args.id.as_array();
 
@@ -122,7 +132,7 @@ impl<'a> CreateCompetitionInstruction<'a> {
             return Err(ProgramError::InvalidSeeds);
         }
 
-        // 7: Allocate CompetitionState account via system program CPI.
+        // 9: Allocate CompetitionState account via system program CPI.
         let space    = CompetitionState::LEN;
         let lamports = Rent::get()?.try_minimum_balance(space)?;
 
@@ -140,10 +150,7 @@ impl<'a> CreateCompetitionInstruction<'a> {
             Seed::from(&[bump]),
         ])])?;
 
-        // 8: Initialize CompetitionState.
-        // Borrow scoped so it drops before the function returns.
-        // end_time written 0 — computed as clock + duration_secs by ActivateCompetition.
-        // winner and final_amount left zero — written by SettleCompetition.
+        // 10: Initialize CompetitionState.
         {
             let mut data = accounts.competition.try_borrow_mut()?;
             let state    = bytemuck::from_bytes_mut::<CompetitionState>(&mut *data);
