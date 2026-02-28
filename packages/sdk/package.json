@@ -1,0 +1,61 @@
+{
+  "name": "tyche-sdk",
+  "version": "0.1.0",
+  "description": "TypeScript SDK for the Tyche protocol on Solana",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "peerDependencies": {
+    "@solana/kit": "^6.1.0",
+    "@solana/program-client-core": "^6.1.0",
+    "tyche-generated-core":         "file:../../clients/js/src/generated/tyche-core",
+    "tyche-generated-escrow":       "file:../../clients/js/src/generated/tyche-escrow",
+    "tyche-generated-auction":      "file:../../clients/js/src/generated/tyche-auction",
+    "tyche-generated-voter-weight-plugin": "file:../../clients/js/src/generated/tyche-voter-weight-plugin"
+  },
+  "devDependencies": {
+    "@solana/kit": "^6.1.0",
+    "@solana/program-client-core": "^6.1.0",
+    "tyche-generated-core":         "file:../../clients/js/src/generated/tyche-core",
+    "tyche-generated-escrow":       "file:../../clients/js/src/generated/tyche-escrow",
+    "tyche-generated-auction":      "file:../../clients/js/src/generated/tyche-auction",
+    "tyche-generated-voter-weight-plugin": "file:../../clients/js/src/generated/tyche-voter-weight-plugin",
+    "tsup": "^8.0.0",
+    "typescript": "^5.5.0",
+    "@types/node": "^22.0.0"
+  },
+  "keywords": [
+    "solana",
+    "tyche",
+    "auction",
+    "sealed-bid",
+    "nft",
+    "magicblock"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AlphaR2/Tyche"
+  }
+}

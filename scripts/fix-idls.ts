@@ -29,6 +29,13 @@ const AUCTION_DISCRIMINANTS: Record<string, number[]> = {
     CloseBidRecord:  [191, 178, 243, 199,  31, 166, 172, 200],
 };
 
+const VOTER_WEIGHT_DISCRIMINANTS: Record<string, number[]> = {
+    CreateRegistrar:             [132, 235, 36, 49, 139, 66, 202, 69],
+    CreateVoterWeightRecord:     [184, 249, 133, 178, 88, 152, 250, 186],
+    UpdateVoterWeightRecord:     [ 45, 185,  3, 36, 109, 190, 115, 169],
+    UpdateMaxVoterWeightRecord:  [103, 175, 201, 251,  2,  9, 251, 179],
+};
+
 // ─── fix Address type ─────────────────────────────────────────────────────────
 // Shank emits { "defined": "Address" } which Codama cannot resolve.
 // Replace with the canonical byte-array representation { "array": ["u8", 32] }.
@@ -69,9 +76,10 @@ function fixIdl(path: string, discriminants: Record<string, number[]>): void {
 }
 
 // ─── run ──────────────────────────────────────────────────────────────────────
-fixIdl("clients/idls/tyche_core.json",    CORE_DISCRIMINANTS);
-fixIdl("clients/idls/tyche_escrow.json",  ESCROW_DISCRIMINANTS);
-fixIdl("clients/idls/tyche_auction.json", AUCTION_DISCRIMINANTS);
+fixIdl("clients/idls/tyche_core.json",                 CORE_DISCRIMINANTS);
+fixIdl("clients/idls/tyche_escrow.json",               ESCROW_DISCRIMINANTS);
+fixIdl("clients/idls/tyche_auction.json",              AUCTION_DISCRIMINANTS);
+fixIdl("clients/idls/tyche_voter_weight_plugin.json",  VOTER_WEIGHT_DISCRIMINANTS);
 
 
 console.log("all IDLs fixed");

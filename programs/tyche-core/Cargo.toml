@@ -8,6 +8,10 @@ edition     = "2021"
 crate-type = ["cdylib", "lib"]
 name       = "tyche_core"
 
+[[bin]]
+name = "tyche-core-discriminators"
+path = "src/bin/compute_discriminators.rs"
+
 [features]
 # Disables the program entrypoint so this crate can be linked as a library.
 # Required when used as a dependency in tyche-cpi or the test suite.

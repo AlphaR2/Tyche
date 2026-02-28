@@ -8,8 +8,6 @@ tyche-common  = { workspace = true }
 tyche-core    = { workspace = true }
 tyche-escrow  = { workspace = true }
 tyche-auction = { workspace = true }
-litesvm       = { workspace = true }
-litesvm-token = { workspace = true }
 solana-sdk    = { workspace = true }
 bytemuck      = { workspace = true }
 tokio         = { workspace = true }

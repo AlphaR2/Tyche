@@ -1,0 +1,17 @@
+{
+  "name": "tyche-generated-voter-weight-plugin",
+  "version": "1.0.0",
+  "description": "Auto-generated Codama client for tyche-voter-weight-plugin. Do not edit manually.",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "peerDependencies": {
+    "@solana/kit": "^6.1.0"
+  },
+  "dependencies": {
+    "@solana/program-client-core": "^6.1.0"
+  }
+}

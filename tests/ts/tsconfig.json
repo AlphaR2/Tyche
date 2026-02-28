@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "paths": {
+      "tyche-sdk":               ["../../packages/sdk/src/index.ts"],
+      "tyche-generated-core":    ["../../clients/js/src/generated/tyche-core/src/generated"],
+      "tyche-generated-escrow":  ["../../clients/js/src/generated/tyche-escrow/src/generated"],
+      "tyche-generated-auction": ["../../clients/js/src/generated/tyche-auction/src/generated"]
+    }
+  },
+  "include": ["./**/*.ts"],
+  "exclude": ["node_modules"]
+}

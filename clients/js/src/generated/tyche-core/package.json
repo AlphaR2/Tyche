@@ -1,7 +1,7 @@
 {
-  "name": "js-client",
-  "version": "1.0.0",
-  "description": "",
+  "name": "tyche-generated-core",
+  "version": "0.1.0",
+  "description": "Auto-generated Codama client for tyche-core. Do not edit manually.",
   "main": "src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

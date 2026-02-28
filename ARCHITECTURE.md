@@ -46,11 +46,11 @@ execution model that TEE enables. TEE is the mechanism. CEE is the product const
 
 ```
 +----------------------------------------------------------+
-|                    CONCEAL APP                           |
-|  Next.js frontend, two auction contexts:                 |
-|  /auction/nft/[id]   -- NFT skin                         |
-|  /auction/game/[id]  -- game item skin                   |
-|  Same AuctionRoom component, different metadata          |
+|                      TYCHE SDK                           |
+|  TypeScript integration layer for:                       |
+|  -- Creating sealed-bid competitions                     |
+|  -- Managing real-time bid logic                         |
+|  -- Orchestrating trustless settlement                   |
 +---------------------------+------------------------------+
                             |
                   TypeScript SDK calls
@@ -72,12 +72,12 @@ execution model that TEE enables. TEE is the mechanism. CEE is the product const
 |              ON-CHAIN PROGRAMS (Pinocchio)               |
 |                                                          |
 |  tyche-core        tyche-escrow       tyche-auction      |
-|  ──────────        ────────────       ────────────────   |
-|  Phase state       SOL custody        English auction    |
-|  machine           EscrowVault PDAs   AuctionState       |
-|  CompetitionState  Deposit            PlaceBid (in CEE)  |
-|  ParticipantRecord ReleaseWinner      CreateAuction      |
-|                    Refund             FinalizeAuction     |
+|  Machine phase     SOL custody        Auction logic      |
+|                                                          |
+|              tyche-voter-weight-plugin                   |
+|              ─────────────────────────                   |
+|              Realms / SPL Governance integration         |
+|              Reads EscrowVaults to derive VoterWeight    |
 +---------------------------+------------------------------+
                             |
             delegate / execute inside / undelegate
@@ -374,3 +374,22 @@ exactly the clearing price — no price discrimination, no front-running.
 
 LP registration and quote submission are handled by tyche-liquidity. Settlement routes
 through tyche-escrow's existing vault model.
+
+---
+
+## Realms Governance Integration
+
+Tyche implements the **SPL Governance Add-in API** to allow SOL deposits to function as voting weight.
+
+### The Voter-Weight Plugin
+The `tyche-voter-weight-plugin` acts as an intermediary between `tyche-escrow` and `spl-governance`.
+
+1. **Registrar**: Configured for a specific Realm and Mint. It points to the trusted `tyche-escrow` program and a specific `competition` scope.
+2. **VoterWeightRecord**: A standard account expected by Realms. The plugin populates the `voter_weight` field by performing a zero-copy read of the voter's `EscrowVault` in `tyche-escrow`.
+3. **Update Flow**:
+   - The user calls `UpdateVoterWeightRecord`.
+   - The plugin verifies the `EscrowVault` PDA and checks that it belongs to the correct competition.
+   - The `vault.amount` is mapped 1:1 to `voter_weight`.
+   - The user then votes on Realms, which reads the weight from the record.
+
+This architecture ensures that governance is controlled by those actively participating in the protocol's secondary markets, aligning long-term protocol health with participant interests.

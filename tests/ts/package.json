@@ -1,0 +1,31 @@
+{
+  "name": "tyche-ts-tests",
+  "version": "0.1.0",
+  "description": "TypeScript integration tests for the Tyche protocol (devnet)",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test":          "vitest run --reporter=verbose",
+    "test:watch":    "vitest --reporter=verbose",
+    "test:programs": "vitest run --reporter=verbose programs",
+    "test:sdk":      "vitest run --reporter=verbose sdk"
+  },
+  "devDependencies": {
+    "@solana/kit":                 "^6.1.0",
+    "@solana/program-client-core": "^6.1.0",
+    "@solana-program/system":        "^0.6.0",
+    "@solana-program/memo":          "^0.6.0",
+    "@solana-program/token":         "^0.4.0",
+    "@solana-program/compute-budget": "^0.6.0",
+    "@types/node":                 "^22.0.0",
+    "dotenv":                      "^16.4.0",
+    "typescript":                  "^5.5.0",
+    "vitest":                      "^1.6.0",
+    
+    "tyche-generated-core":         "file:../../clients/js/src/generated/tyche-core",
+    "tyche-generated-escrow":       "file:../../clients/js/src/generated/tyche-escrow",
+    "tyche-generated-auction":      "file:../../clients/js/src/generated/tyche-auction",
+    "tyche-generated-voter-weight-plugin": "file:../../clients/js/src/generated/tyche-voter-weight-plugin",
+    "tyche-sdk":                    "file:../../packages/sdk"
+  }
+}

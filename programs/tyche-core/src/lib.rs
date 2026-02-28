@@ -18,6 +18,7 @@ pub mod state;
 
 address::declare_id!("TYCANGQk6tumtij3tHwsRPSNkSHU3KGSNxNG59qJrHx");
 
+
 // Gate the entrypoint behind `no-entrypoint` so this crate can be linked as a
 // library by tyche-cpi and the test suite without registering a second entry symbol.
 #[cfg(not(feature = "no-entrypoint"))]

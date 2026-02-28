@@ -4,9 +4,7 @@ Tyche is a competitive price discovery protocol for Solana. Its internal executi
 engine — CEE (Competitive Execution Engine) — runs sealed, privacy-preserving
 competition for any asset class at real-time speed, settled by trustless on-chain code.
 
-The first application surface is **Conceal**: private auctions for NFTs and in-game
-items. Future surfaces include prediction markets and private liquidity markets. All
-surfaces run on the same three on-chain programs.
+The first application surface is the **Tyche SDK**: a suite of TypeScript tools to run price discovery for any asset class. All surfaces run on the same three on-chain programs.
 
 ## What CEE Means
 
@@ -28,17 +26,9 @@ COMPETE  engine processes inside TEE at sub-50ms
 CLEAR    verifiable outcome, automatic settlement
 ```
 
-## What Conceal Is
+## SDK-Driven Price Discovery
 
-Conceal is the first application built on Tyche/CEE. It runs sealed English auctions
-for two asset classes:
-
-- NFT auctions ("Collector Drop") — for creators running private drops
-- In-game item auctions ("Rust Undead Market") — for game economies
-
-Both surfaces run on the same three on-chain programs. A game studio integrating CEE
-writes their own consumer program and calls the same tyche-core and tyche-escrow via CPI.
-Conceal is the reference implementation that proves the engine works.
+Tyche is built to be integrated. Whether you are running a game economy or an NFT drop, you use the Tyche SDK to call the same `tyche-core` and `tyche-escrow` programs via CPI or direct client calls.
 
 ## Stack
 
@@ -48,7 +38,7 @@ Conceal is the reference implementation that proves the engine works.
 | IDL generation   | Shank                                         |
 | Client codegen   | Codama                                        |
 | TypeScript SDK   | @solana/kit                                   |
-| Frontend         | Next.js                                       |
+| Realms Plugin    | Plugin for weighted votes based on auction    |
 | Privacy layer    | MagicBlock Private Ephemeral Rollup, Intel TDX|
 
 Anchor is not used. Every program is written with Pinocchio directly.
@@ -61,6 +51,7 @@ Tyche/
 |   +-- tyche-core/      competition state machine (CEE lifecycle)
 |   +-- tyche-escrow/    SOL custody (per-bidder vault PDAs)
 |   +-- tyche-auction/   auction semantics, PlaceBid inside CEE
+|   +-- tyche-voter-weight-plugin/  Realms governance integration
 |
 +-- crates/
 |   +-- tyche-common/    shared constants, macros, delegation CPI helper
@@ -70,7 +61,6 @@ Tyche/
 |   +-- generated/ts/    Codama-generated TypeScript clients (do not edit)
 |   +-- sdk/             @tyche-protocol/sdk hand-written layer
 |
-+-- app/                 Conceal Next.js frontend
 +-- tests/               Rust integration tests
 +-- clients/idls/         Shank-generated IDL JSON files (Codama-compatible)
 +-- docs/                Architecture, security, and integration documentation
@@ -83,11 +73,34 @@ Tyche/
 - `cargo-build-sbf` (`cargo install cargo-build-sbf`)
 - `shank-cli` (`cargo install shank-cli`)
 - Node.js >= 20
-- `just` (`cargo install just`)
-- MagicBlock local validator (see docs/CEE.md for setup)
+- `just` ([Case-sensitive command runner](https://github.com/casey/just)).
+  - **Quick Install**: `sudo apt update && sudo apt install just` (Ubuntu 22.04+)
+  - **From Cargo**: `cargo install just`
+  - **From Snap**: `sudo snap install just`
 
-## Build
+## Build & Test (Recommended)
 
+Tyche comes with an interactive CLI for the full development lifecycle.
+
+```sh
+# Ensure the script is executable
+chmod +x scripts/tyche-cli.sh
+
+# Start the interactive UI
+./scripts/tyche-cli.sh
+```
+
+Within the UI, you can:
+- **Build All**: Full IDL -> Client -> SBF pipeline.
+- **Selective Build**: Run individual generators or SBF compilation.
+- **Interactive Testing**: Run all tests or pick individual programs.
+- **Environment Setup**: One-click funding and configuration.
+
+---
+
+## Build (Legacy/Automation)
+
+You can still use `just` or manual commands for automation.
 ```sh
 # Full pipeline: generate IDLs, generate TypeScript clients, build SBF binaries
 just all
@@ -98,14 +111,101 @@ just generate   # regenerate TypeScript clients from IDLs
 just build      # build SBF binaries only
 ```
 
-## Test
+### Manual Build (Without Just)
+If you do not have `just` installed, run these commands in order:
+```sh
+# 1. Generate IDLs
+shank idl --crate-root programs/tyche-core    --out-dir clients/idls
+shank idl --crate-root programs/tyche-escrow  --out-dir clients/idls
+shank idl --crate-root programs/tyche-auction --out-dir clients/idls
+shank idl --crate-root programs/tyche-voter-weight-plugin --out-dir clients/idls
+npx ts-node scripts/fix-idls.ts
+
+# 2. Generate TypeScript Client
+npx ts-node scripts/codama.ts
+node scripts/restore-pkg-names.cjs
+
+# 3. Build Rust Programs
+cargo build-sbf
+```
+
+## Quick Start: CLI UI
+
+The fastest way to verify the codebase is to use the interactive suite:
+
+1. **Permissions**: `chmod +x scripts/tyche-cli.sh`
+2. **Launch**: `./scripts/tyche-cli.sh`
+3. **Setup**: Select `6` (Setup Test Env)
+4. **Build**: Select `1` (Build All)
+5. **Test**: Select `7` (Run All Tests)
+
+TypeScript tests run against devnet and require funded keypairs.
+**Must be run from a WSL/Linux terminal** — Windows npm cannot install
+`@solana/kit` (native esbuild) over UNC paths.
+
+### Environment Setup
+
+Before running tests, configure your environment:
 
 ```sh
-# Rust unit and integration tests (host target, no SBF required)
-just test-rust
+# 1. Copy the example env file
+cp tests/ts/.env.example tests/ts/.env.test
 
-# TypeScript integration tests against a local validator
+# 2. Edit .env.test and set your values:
+#    - RPC_URL: your Helius devnet URL (or leave as public devnet)
+#    - AUTHORITY_KEYPAIR / BIDDER1_KEYPAIR / BIDDER2_KEYPAIR: funded keypair paths
+#    - TREASURY_ADDRESS: the authority's address (or any devnet address)
+#
+# The setup script below generates keypairs and fills in the paths automatically.
+
+# 3. One-time bootstrap — generates keypairs, airdrops devnet SOL, writes .env.test
+just setup-tests
+```
+
+> **Tip**: Sign up at [helius.dev](https://helius.dev) for a free dedicated devnet
+> RPC URL. The public endpoint rate-limits airdrop and test transactions.
+
+```sh
+# Run all TypeScript tests (programs + SDK)
 just test-ts
+
+# Granular test targets
+just test-programs            # raw program instruction tests only
+just test-sdk                 # SDK wrapper tests only
+just test-watch               # watch mode (re-runs on file changes)
+just test-file sdk/pdas       # run a specific test file
+```
+
+#### MagicBlock PER tests (optional)
+
+Tests that require MagicBlock delegation (ActivateAuction, PlaceBid via PER)
+are **skipped by default**.  To enable them, add to `tests/ts/.env.test`:
+
+```sh
+MAGICBLOCK_VALIDATOR=1
+MAGICBLOCK_VALIDATOR_ADDRESS=LuzXEV3trGF4jQzpRzZaaTB9TqSwLkB7bpKQCQC7BAg
+```
+
+#### Test structure
+
+```
+tests/ts/
+├── setup/
+│   ├── env.ts             # RPC, signers, newCompetitionId()
+│   ├── airdrop.ts         # retry-airdrop helper
+│   ├── helpers.ts         # sendAndConfirm, getBlockhashForAccounts
+│   └── global-setup.ts    # loads .env.test before any test file
+├── programs/              # raw generated-client instruction tests
+│   ├── tyche-core.test.ts
+│   ├── tyche-escrow.test.ts
+│   ├── tyche-auction.test.ts
+│   └── integration.test.ts
+└── sdk/                   # SDK wrapper tests (tyche-sdk)
+    ├── pdas.test.ts        # PDA derivations (pure computation, no RPC)
+    ├── accounts.test.ts    # fetchDecodedCompetition / fetchDecodedAuction
+    ├── create-auction.test.ts
+    ├── place-bid.test.ts
+    └── full-flow.test.ts   # end-to-end lifecycle
 ```
 
 ## Documentation
@@ -117,11 +217,21 @@ just test-ts
 | docs/SECURITY.md      | Threat model, invariants, security checklist          |
 | docs/INTEGRATION.md   | How to integrate CEE as a game or NFT developer       |
 | programs/*/README.md  | Per-program instructions, accounts, errors            |
+| programs/tyche-voter-weight-plugin/README.md | Realms plugin specific documentation          |
 | clients/sdk/README.md | TypeScript SDK usage and full auction flow example    |
+
+## Governance (Realms Integration)
+
+Tyche features a native governance integration with **Realms (SPL Governance)**. 
+
+The `tyche-voter-weight-plugin` allows the DAO to recognize SOL deposits in Tyche as voting power. This enables a "Staked SOL" governance model where:
+1. **Capital Alignment**: Users who have skin in the game (SOL deposited in auctions) have influence over protocol parameters.
+2. **Just-in-Time Weight**: Voting weight is calculated from live escrow balances, requiring users to have an active commitment to vote.
+3. **Low Overhead**: Built with Pinocchio for minimal compute costs during vote weight updates.
 
 ## Protocol Vision
 
-Conceal is the first vertical. Two more are designed and architecturally accounted for:
+Tyche is a generalized engine. The SDK supports:
 
 - **Prediction markets** — TEE-private positions, competitive commit-reveal oracle
   resolution, fair-launch batch auction for initial odds

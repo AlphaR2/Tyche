@@ -1,0 +1,38 @@
+[package]
+name        = "tyche-voter-weight-plugin"
+version     = "0.1.0"
+description = "SPL Governance voter-weight plugin. Derives voting power from tyche-escrow EscrowVault SOL deposits."
+edition     = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name       = "tyche_voter_weight_plugin"
+
+[[bin]]
+name = "tyche-voter-weight-discriminators"
+path = "src/bin/compute_discriminators.rs"
+
+[features]
+# Disables the program entrypoint so this crate can be linked as a library.
+# Required when used as a dependency in the test suite.
+no-entrypoint = []
+default       = []
+
+[dependencies]
+pinocchio        = { workspace = true }
+pinocchio-pubkey = { workspace = true }
+pinocchio-system = { workspace = true }
+bytemuck         = { workspace = true }
+shank            = { workspace = true }
+solana-address   = { workspace = true, features = ["curve25519"] }
+spl-governance-addin-api =  { workspace = true }
+sha2 = { workspace = true }
+
+
+# Off-chain only — needed by the compute_discriminators binary.
+# Not pulled in when compiling for the SBF target.
+[target.'cfg(not(target_os = "solana"))'.dependencies]
+sha2 = { workspace = true }
+
+[lints]
+workspace = true

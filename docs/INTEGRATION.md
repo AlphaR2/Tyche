@@ -15,13 +15,13 @@ lifecycle of a sealed, privacy-preserving auction:
 - **tyche-core** — competition state machine (phase transitions, soft-close, settlement)
 - **tyche-escrow** — SOL custody (per-bidder vault PDAs, release, refund)
 - **tyche-auction** — auction semantics (asset escrow, sealed bid processing, asset transfer)
+- **tyche-voter-weight-plugin** — Realms / SPL Governance integration
 
 Your product calls these programs through the `@tyche-protocol/sdk`. You do not call
 the programs directly — the SDK handles instruction building, PDA derivation, PER
 session routing, and settlement orchestration.
 
-The Conceal frontend is the reference implementation. You are building your own UI
-on top of the same engine.
+The SDK tests in `tests/ts` provide the reference implementation. You are building your own UI or consumer program on top of the same engine.
 
 ---
 

@@ -44,10 +44,7 @@ Sequence:
 10. Refund losing vaults (tyche-escrow via CPI)
 11. Verify: winner holds asset, seller received SOL, losers refunded
 
-The integration test does not use MagicBlock PER. It tests the program logic end-to-end
-on a local litesvm environment. PER integration (delegation, sealed bidding,
-undelegation) is tested separately against a live local MagicBlock validator using the
-TypeScript test suite.
+
 
 ---
 

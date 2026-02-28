@@ -4,6 +4,7 @@ members = [
     "programs/tyche-core",
     "programs/tyche-escrow",
     "programs/tyche-auction",
+    "programs/tyche-voter-weight-plugin",
     "crates/tyche-common",
     "tests",
 ]
@@ -17,6 +18,7 @@ pinocchio-token  = "0.5.0"
 ephemeral-rollups-pinocchio = { version = "0.8.2" }
 bytemuck = { version = "1.24.0", features = ["derive"] }
 solana-address = { version = "2.0", features = ["bytemuck"] }
+spl-governance-addin-api = { package = "spl-governance-addin-api-mythic", version = "0.1.6" }
 
 
 # Utilities
@@ -25,17 +27,16 @@ sha2     = "0.10.8"
 shank   = "0.4.8"
 
 # Testing
-litesvm       = "0.9.1"
-litesvm-token = "0.9.1"
 solana-sdk    = "3.0.0"
 solana-system-interface = "3.0.0"
 tokio         = { version = "1", features = ["full"] }
 
 # Internal workspace crates
-tyche-common  = { path = "crates/tyche-common" }
-tyche-core    = { path = "programs/tyche-core",    features = ["no-entrypoint"] }
-tyche-escrow  = { path = "programs/tyche-escrow",  features = ["no-entrypoint"] }
-tyche-auction = { path = "programs/tyche-auction", features = ["no-entrypoint"] }
+tyche-common              = { path = "crates/tyche-common" }
+tyche-core                = { path = "programs/tyche-core",                features = ["no-entrypoint"] }
+tyche-escrow              = { path = "programs/tyche-escrow",              features = ["no-entrypoint"] }
+tyche-auction             = { path = "programs/tyche-auction",             features = ["no-entrypoint"] }
+tyche-voter-weight-plugin = { path = "programs/tyche-voter-weight-plugin", features = ["no-entrypoint"] }
 
 [profile.release]
 opt-level       = "z"

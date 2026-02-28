@@ -1,0 +1,25 @@
+/home/alphar/solana/Tyche/programs/tyche-voter-weight-plugin/target/sbpf-solana-solana/release/deps/tyche_voter_weight_plugin.d: programs/tyche-voter-weight-plugin/src/lib.rs programs/tyche-voter-weight-plugin/src/args/mod.rs programs/tyche-voter-weight-plugin/src/args/create_registrar.rs programs/tyche-voter-weight-plugin/src/args/update_voter_weight_record.rs programs/tyche-voter-weight-plugin/src/discriminator.rs programs/tyche-voter-weight-plugin/src/entrypoint.rs programs/tyche-voter-weight-plugin/src/error.rs programs/tyche-voter-weight-plugin/src/instructions.rs programs/tyche-voter-weight-plugin/src/processor/mod.rs programs/tyche-voter-weight-plugin/src/processor/create_registrar.rs programs/tyche-voter-weight-plugin/src/processor/create_voter_weight_record.rs programs/tyche-voter-weight-plugin/src/processor/update_voter_weight_record.rs programs/tyche-voter-weight-plugin/src/processor/update_max_voter_weight_record.rs programs/tyche-voter-weight-plugin/src/state/mod.rs programs/tyche-voter-weight-plugin/src/state/registrar.rs programs/tyche-voter-weight-plugin/src/state/voter_weight_record.rs programs/tyche-voter-weight-plugin/src/state/max_voter_weight_record.rs programs/tyche-voter-weight-plugin/src/utils/mod.rs programs/tyche-voter-weight-plugin/src/utils/pda.rs
+
+/home/alphar/solana/Tyche/programs/tyche-voter-weight-plugin/target/sbpf-solana-solana/release/deps/tyche_voter_weight_plugin.so: programs/tyche-voter-weight-plugin/src/lib.rs programs/tyche-voter-weight-plugin/src/args/mod.rs programs/tyche-voter-weight-plugin/src/args/create_registrar.rs programs/tyche-voter-weight-plugin/src/args/update_voter_weight_record.rs programs/tyche-voter-weight-plugin/src/discriminator.rs programs/tyche-voter-weight-plugin/src/entrypoint.rs programs/tyche-voter-weight-plugin/src/error.rs programs/tyche-voter-weight-plugin/src/instructions.rs programs/tyche-voter-weight-plugin/src/processor/mod.rs programs/tyche-voter-weight-plugin/src/processor/create_registrar.rs programs/tyche-voter-weight-plugin/src/processor/create_voter_weight_record.rs programs/tyche-voter-weight-plugin/src/processor/update_voter_weight_record.rs programs/tyche-voter-weight-plugin/src/processor/update_max_voter_weight_record.rs programs/tyche-voter-weight-plugin/src/state/mod.rs programs/tyche-voter-weight-plugin/src/state/registrar.rs programs/tyche-voter-weight-plugin/src/state/voter_weight_record.rs programs/tyche-voter-weight-plugin/src/state/max_voter_weight_record.rs programs/tyche-voter-weight-plugin/src/utils/mod.rs programs/tyche-voter-weight-plugin/src/utils/pda.rs
+
+/home/alphar/solana/Tyche/programs/tyche-voter-weight-plugin/target/sbpf-solana-solana/release/deps/libtyche_voter_weight_plugin.rlib: programs/tyche-voter-weight-plugin/src/lib.rs programs/tyche-voter-weight-plugin/src/args/mod.rs programs/tyche-voter-weight-plugin/src/args/create_registrar.rs programs/tyche-voter-weight-plugin/src/args/update_voter_weight_record.rs programs/tyche-voter-weight-plugin/src/discriminator.rs programs/tyche-voter-weight-plugin/src/entrypoint.rs programs/tyche-voter-weight-plugin/src/error.rs programs/tyche-voter-weight-plugin/src/instructions.rs programs/tyche-voter-weight-plugin/src/processor/mod.rs programs/tyche-voter-weight-plugin/src/processor/create_registrar.rs programs/tyche-voter-weight-plugin/src/processor/create_voter_weight_record.rs programs/tyche-voter-weight-plugin/src/processor/update_voter_weight_record.rs programs/tyche-voter-weight-plugin/src/processor/update_max_voter_weight_record.rs programs/tyche-voter-weight-plugin/src/state/mod.rs programs/tyche-voter-weight-plugin/src/state/registrar.rs programs/tyche-voter-weight-plugin/src/state/voter_weight_record.rs programs/tyche-voter-weight-plugin/src/state/max_voter_weight_record.rs programs/tyche-voter-weight-plugin/src/utils/mod.rs programs/tyche-voter-weight-plugin/src/utils/pda.rs
+
+programs/tyche-voter-weight-plugin/src/lib.rs:
+programs/tyche-voter-weight-plugin/src/args/mod.rs:
+programs/tyche-voter-weight-plugin/src/args/create_registrar.rs:
+programs/tyche-voter-weight-plugin/src/args/update_voter_weight_record.rs:
+programs/tyche-voter-weight-plugin/src/discriminator.rs:
+programs/tyche-voter-weight-plugin/src/entrypoint.rs:
+programs/tyche-voter-weight-plugin/src/error.rs:
+programs/tyche-voter-weight-plugin/src/instructions.rs:
+programs/tyche-voter-weight-plugin/src/processor/mod.rs:
+programs/tyche-voter-weight-plugin/src/processor/create_registrar.rs:
+programs/tyche-voter-weight-plugin/src/processor/create_voter_weight_record.rs:
+programs/tyche-voter-weight-plugin/src/processor/update_voter_weight_record.rs:
+programs/tyche-voter-weight-plugin/src/processor/update_max_voter_weight_record.rs:
+programs/tyche-voter-weight-plugin/src/state/mod.rs:
+programs/tyche-voter-weight-plugin/src/state/registrar.rs:
+programs/tyche-voter-weight-plugin/src/state/voter_weight_record.rs:
+programs/tyche-voter-weight-plugin/src/state/max_voter_weight_record.rs:
+programs/tyche-voter-weight-plugin/src/utils/mod.rs:
+programs/tyche-voter-weight-plugin/src/utils/pda.rs:

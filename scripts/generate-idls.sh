@@ -16,4 +16,8 @@ shank idl --crate-root programs/tyche-escrow --out-dir clients/idls
 echo "Generating IDL for tyche-auction..."
 shank idl --crate-root programs/tyche-auction --out-dir clients/idls
 
+# Generate IDL for tyche-voter-weight-plugin
+echo "Generating IDL for tyche-voter-weight-plugin..."
+shank idl --crate-root programs/tyche-voter-weight-plugin --out-dir clients/idls
+
 echo "All IDLs generated in clients/idls/"
