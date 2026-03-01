@@ -1,5 +1,0 @@
-\\wsl.localhost\\Ubuntu\\home\\alphar\\solana\\Tyche:
-ARCHITECTURE.md  SKILL.md  docs		 package-lock.json  scripts
-Cargo.lock	 TODO.md   justfile	 package.json	    target
-Cargo.toml	 clients   node_modules  packages	    tests
-README.md	 crates    nul		 programs	    tsconfig.json
