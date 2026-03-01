@@ -25,6 +25,7 @@ idl:
 # Outputs to clients/js/src/generated/.
 generate:
     npx ts-node scripts/codama.ts
+    node scripts/patch-discriminators.cjs
     node scripts/restore-pkg-names.cjs
     @echo "TypeScript clients written to clients/js/src/generated/"
 

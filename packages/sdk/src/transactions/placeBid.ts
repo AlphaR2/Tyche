@@ -21,15 +21,13 @@
  */
 
 import type { Address, Instruction, TransactionSigner } from '@solana/kit';
-import { getPlaceBidInstruction } from 'tyche-generated-auction';
+import { buildPlaceBidIx } from '../rawInstructions.js';
 import {
-  getAuctionStatePda,
-  getCompetitionStatePda,
   getEscrowVaultPda,
   getBidRecordPda,
   getParticipantRecordPda,
-} from '../pdas';
-import { TYCHE_CORE_PROGRAM_ADDRESS } from '../constants';
+} from '../pdas.js';
+import { TYCHE_CORE_PROGRAM_ADDRESS } from '../constants.js';
 
 export type PlaceBidParams = {
   /**
@@ -128,14 +126,14 @@ export async function buildPlaceBidTransaction(
     getParticipantRecordPda(competitionAddress, bidder.address),
   ]);
 
-  const instruction = getPlaceBidInstruction({
-    auctionState: auctionStateAddress,
-    competition: competitionAddress,
+  const instruction = buildPlaceBidIx({
+    auctionState:                auctionStateAddress,
+    competition:                 competitionAddress,
     bidRecord,
     vault,
     bidder,
     payer,
-    tycheCoreProgram: TYCHE_CORE_PROGRAM_ADDRESS,
+    tycheCoreProgram:            TYCHE_CORE_PROGRAM_ADDRESS,
     competitionParticipantRecord: participantRecord,
     amount,
   });

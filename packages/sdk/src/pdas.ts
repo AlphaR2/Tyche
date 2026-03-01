@@ -20,7 +20,7 @@ import {
 // Encode a base58 Address to its raw 32-byte representation.
 const addrEnc = getAddressEncoder();
 function ab(address: Address): Uint8Array {
-  return addrEnc.encode(address);
+  return new Uint8Array(addrEnc.encode(address));
 }
 
 // Encode a u64 (bigint) to an 8-byte little-endian Uint8Array.
@@ -45,9 +45,12 @@ export function getCompetitionStatePda(
   authority: Address,
   id: bigint,
 ): Promise<readonly [Address, number]> {
+  const idBytes = new Uint8Array(32);
+  new DataView(idBytes.buffer).setBigUint64(0, id, true);
+  
   return getProgramDerivedAddress({
     programAddress: TYCHE_CORE_PROGRAM_ADDRESS,
-    seeds: [COMPETITION_SEED, ab(authority), u64Le(id)],
+    seeds: [COMPETITION_SEED, ab(authority), idBytes],
   });
 }
 
@@ -171,22 +174,21 @@ export function getDelegationMetadataPda(
 // ── MagicBlock ACL Permission PDA ─────────────────────────────────────────────
 
 /**
- * Derives the MagicBlock ACL permission PDA for an authority address.
+ * Derives the MagicBlock ACL permission PDA for a target account.
  *
- * Seeds: `[b"permission:", authority_bytes]`
+ * Seeds: `[b"permission:", target_account_bytes]`
  *
- * The permission PDA is created once per authority by the MagicBlock ACL
- * program (`ACLseoPoyC3cBqoUtkbjZ4aDrkurZW86v19pXz2XQnp1`).  Pass the
+ * The permission PDA is created once per delegated account by the MagicBlock ACL
+ * program (`ACLseoPoyC3cBqoUtkbjZ4aDrkurZW86v19pXz2XQnp1`). Pass the
  * returned address as the `permission` account and
  * `MAGICBLOCK_PERMISSION_PROGRAM_ADDRESS` as `permissionProgram` when calling
  * `buildActivateAuctionTransaction`.
  *
- * @param authority - The address that will sign `ActivateCompetition` /
- *                    `ActivateAuction` (i.e. the competition creator).
+ * @param targetAccount - The address of the account being delegated (e.g. CompetitionState).
  */
-export function getPermissionPda(authority: Address): Promise<readonly [Address, number]> {
+export function getPermissionPda(targetAccount: Address): Promise<readonly [Address, number]> {
   return getProgramDerivedAddress({
     programAddress: MAGICBLOCK_PERMISSION_PROGRAM_ADDRESS,
-    seeds: [PERMISSION_SEED, ab(authority)],
+    seeds: [PERMISSION_SEED, ab(targetAccount)],
   });
 }

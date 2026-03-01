@@ -30,10 +30,9 @@
  */
 
 import type { Address, Instruction, TransactionSigner } from '@solana/kit';
-import { getActivateCompetitionInstruction } from 'tyche-generated-core';
-import { getActivateAuctionInstruction } from 'tyche-generated-auction';
-import type { MagicBlockActivateCompetitionAccounts, MagicBlockDelegationAccounts } from '../types';
-import { MAGICBLOCK_DELEGATION_PROGRAM_ADDRESS } from '../constants';
+import { buildActivateCompetitionIx, buildActivateAuctionIx } from '../rawInstructions.js';
+import type { MagicBlockActivateCompetitionAccounts, MagicBlockDelegationAccounts } from '../types.js';
+import { MAGICBLOCK_DELEGATION_PROGRAM_ADDRESS } from '../constants.js';
 
 export type ActivateAuctionParams = {
   /** Competition authority (seller). Must sign. */
@@ -122,29 +121,29 @@ export function buildActivateAuctionTransaction(
     commitFrequencyMs = 1000,
   } = params;
 
-  const activateCompetitionIx = getActivateCompetitionInstruction({
-    competition: competitionAddress,
+  const activateCompetitionIx = buildActivateCompetitionIx({
+    competition:        competitionAddress,
     authority,
     payer,
-    permission: cd.permission,
-    delegationBuffer: cd.buffer,
-    delegationRecord: cd.delegationRecord,
+    permission:         cd.permission,
+    delegationBuffer:   cd.buffer,
+    delegationRecord:   cd.delegationRecord,
     delegationMetadata: cd.delegationMetadata,
-    delegationProgram: MAGICBLOCK_DELEGATION_PROGRAM_ADDRESS,
-    permissionProgram: cd.permissionProgram,
-    validator: cd.validator,
+    delegationProgram:  MAGICBLOCK_DELEGATION_PROGRAM_ADDRESS,
+    permissionProgram:  cd.permissionProgram,
+    validator:          cd.validator,
     commitFrequencyMs,
   });
 
-  const activateAuctionIx = getActivateAuctionInstruction({
-    auctionState: auctionStateAddress,
-    competition: competitionAddress,
+  const activateAuctionIx = buildActivateAuctionIx({
+    auctionState:       auctionStateAddress,
+    competition:        competitionAddress,
     authority,
-    buffer: ad.buffer,
-    delegationRecord: ad.delegationRecord,
+    buffer:             ad.buffer,
+    delegationRecord:   ad.delegationRecord,
     delegationMetadata: ad.delegationMetadata,
-    delegationProgram: MAGICBLOCK_DELEGATION_PROGRAM_ADDRESS,
-    validator: ad.validator,
+    delegationProgram:  MAGICBLOCK_DELEGATION_PROGRAM_ADDRESS,
+    validator:          ad.validator,
   });
 
   return {

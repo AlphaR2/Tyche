@@ -232,6 +232,8 @@ run_selective_tests() {
     echo -e "  ${CYAN}2${NC} │ Tyche Escrow"
     echo -e "  ${CYAN}3${NC} │ Tyche Auction"
     echo -e "  ${CYAN}4${NC} │ Voter Weight Plugin"
+    echo -e "  ${CYAN}5${NC} │ SDK Flows & PDAs"
+    echo -e "  ${CYAN}6${NC} │ ${BOLD}Auction Governance Demo${NC}  ${DIM}Full auction flow simulation${NC}"
     echo -e "  ${BLUE}──┼$( printf '%.0s─' {1..40} )${NC}"
     echo -e "  ${YELLOW}0${NC} │ Back"
     echo ""
@@ -243,6 +245,8 @@ run_selective_tests() {
         2) (cd tests/ts && npx vitest run programs/tyche-escrow.test.ts) ;;
         3) (cd tests/ts && npx vitest run programs/tyche-auction.test.ts) ;;
         4) (cd tests/ts && npx vitest run programs/tyche-voter-weight-plugin.test.ts) ;;
+        5) (cd tests/ts && npx vitest run sdk/) ;;
+        6) (cd tests/ts && npx vitest run simulation/auction-governance-demo.test.ts) ;;
         0) return ;;
         *) print_error "Invalid choice"; sleep 1; run_selective_tests ;;
     esac

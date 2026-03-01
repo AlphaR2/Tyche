@@ -37,6 +37,12 @@ import { createClient, wsUrlFromRpcUrl, type Client } from './client.js';
 const RPC_URL    = process.env['RPC_URL']    ?? 'https://api.devnet.solana.com';
 const RPC_WS_URL = process.env['RPC_WS_URL'] ?? wsUrlFromRpcUrl(RPC_URL);
 
+// Provide a router switch based on the environment configuration
+export const MAGICBLOCK_REGION = process.env['MAGICBLOCK_REGION'] ?? 'Devnet';
+export const MAGICBLOCK_ROUTER_URL = MAGICBLOCK_REGION === 'TEE' 
+  ? 'https://tee.magicblock.app' 
+  : 'https://devnet-router.magicblock.app';
+
 // ── Client (rpc + rpcSubscriptions) ──────────────────────────────────────────
 
 export const client: Client = createClient(RPC_URL, RPC_WS_URL);

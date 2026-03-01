@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "generate": "shank idl --crate-root programs/tyche-core --out-dir clients/idls && shank idl --crate-root programs/tyche-escrow --out-dir clients/idls && shank idl --crate-root programs/tyche-auction --out-dir clients/idls && ts-node scripts/fix-idls.ts && ts-node scripts/codama.ts && node scripts/restore-pkg-names.cjs",
+    "generate": "shank idl --crate-root programs/tyche-core --out-dir clients/idls && shank idl --crate-root programs/tyche-escrow --out-dir clients/idls && shank idl --crate-root programs/tyche-auction --out-dir clients/idls && ts-node scripts/fix-idls.ts && ts-node scripts/codama.ts && node scripts/patch-discriminators.cjs && node scripts/restore-pkg-names.cjs",
     "build:sdk": "npx tsup --config packages/sdk/tsup.config.ts",
     "typecheck:sdk": "npx tsc --project packages/sdk/tsconfig.json --noEmit",
     "clean:sdk": "node -e \"require('fs').rmSync('packages/sdk/dist', { recursive: true, force: true })\""

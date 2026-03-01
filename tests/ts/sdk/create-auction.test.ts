@@ -20,7 +20,6 @@ import {
   buildCreateAuctionTransaction,
   getCompetitionStatePda,
   getAuctionStatePda,
-  PHASE_SCHEDULED,
   fetchDecodedCompetition,
   fetchDecodedAuction,
 } from 'tyche-sdk';
@@ -45,7 +44,7 @@ describe('buildCreateAuctionTransaction — address derivation', () => {
       authority,
       payer:         authority,
       competitionId: id,
-      startTime:     BigInt(Math.floor(Date.now() / 1000)),
+      startTime:     BigInt(Math.floor(Date.now() / 1000)) + 60n,
       durationSecs:  3_600n,
       reservePrice:  500_000_000n,
       assetMint:     DUMMY_MINT,
@@ -61,7 +60,7 @@ describe('buildCreateAuctionTransaction — address derivation', () => {
       authority,
       payer:         authority,
       competitionId: id,
-      startTime:     BigInt(Math.floor(Date.now() / 1000)),
+      startTime:     BigInt(Math.floor(Date.now() / 1000)) + 60n,
       durationSecs:  3_600n,
       reservePrice:  500_000_000n,
       assetMint:     DUMMY_MINT,
@@ -76,7 +75,7 @@ describe('buildCreateAuctionTransaction — address derivation', () => {
       authority,
       payer:         authority,
       competitionId: newCompetitionId(),
-      startTime:     BigInt(Math.floor(Date.now() / 1000)),
+      startTime:     BigInt(Math.floor(Date.now() / 1000)) + 60n,
       durationSecs:  3_600n,
       reservePrice:  500_000_000n,
       assetMint:     DUMMY_MINT,
@@ -100,7 +99,7 @@ describe('buildCreateAuctionTransaction — devnet submission', () => {
         authority,
         payer:           authority,
         competitionId:   id,
-        startTime:       BigInt(Math.floor(Date.now() / 1000)),
+        startTime:       BigInt(Math.floor(Date.now() / 1000)) + 60n,
         durationSecs:    3_600n,
         reservePrice:    1_000_000_000n,
         assetMint:       DUMMY_MINT,
@@ -115,7 +114,7 @@ describe('buildCreateAuctionTransaction — devnet submission', () => {
     const comp   = await fetchDecodedCompetition(rpc, competitionAddress);
     const auction = await fetchDecodedAuction(rpc, auctionStateAddress);
 
-    expect(comp.phase).toBe(PHASE_SCHEDULED);
+    expect(comp.phase).toBe('scheduled');
     expect(comp.reservePrice).toBe(1_000_000_000n);
     expect(auction.minBidIncrement).toBe(5_000_000n);
     expect(auction.competition).toBe(competitionAddress);

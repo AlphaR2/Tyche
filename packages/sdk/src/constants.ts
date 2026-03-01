@@ -57,6 +57,13 @@ export const MAGICBLOCK_ROUTER_MAINNET_URL = 'https://router.magicblock.app';
 /** MagicBlock Router — devnet endpoint. */
 export const MAGICBLOCK_ROUTER_DEVNET_URL = 'https://devnet-router.magicblock.app';
 
+/** MagicBlock Router — TEE endpoint. */
+export const MAGICBLOCK_ROUTER_TEE_URL = 'https://tee.magicblock.app';
+
+/** Default MagicBlock TEE Validator Address */
+export const MAGICBLOCK_TEE_VALIDATOR =
+  'FnE6VJT5QNZdedZPnCoLsARgBwoE6DeJNjBs2H1gySXA' as Address<'FnE6VJT5QNZdedZPnCoLsARgBwoE6DeJNjBs2H1gySXA'>;
+
 // ── PDA Seeds ────────────────────────────────────────────────────────────────
 // These must stay in sync with crates/tyche-common/src/seeds.rs
 

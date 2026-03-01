@@ -12,23 +12,20 @@
  * the MagicBlock PER and open the sealed-bid window.
  */
 
-import { getAddressEncoder, type Address, type Instruction, type TransactionSigner } from '@solana/kit';
-import { getCreateCompetitionInstruction } from 'tyche-generated-core';
-import { getCreateAuctionInstruction } from 'tyche-generated-auction';
+import { type Address, type Instruction, type TransactionSigner } from '@solana/kit';
+import { buildCreateCompetitionIx, buildCreateAuctionIx } from '../rawInstructions.js';
 import {
   getCompetitionStatePda,
   getAuctionStatePda,
   getProtocolConfigPda,
-} from '../pdas';
+} from '../pdas.js';
 import {
   SOFT_CLOSE_WINDOW_SECS,
   SOFT_CLOSE_EXTENSION_SECS,
   MAX_SOFT_CLOSES,
   ASSET_TYPE_NFT,
-} from '../constants';
-import type { AssetType } from '../constants';
-
-const addrEnc = getAddressEncoder();
+} from '../constants.js';
+import type { AssetType } from '../constants.js';
 
 /** Parameters for creating a new Tyche sealed-bid auction. */
 export type CreateAuctionParams = {
@@ -152,43 +149,38 @@ export async function buildCreateAuctionTransaction(
     maxSoftCloses = MAX_SOFT_CLOSES,
   } = params;
 
-  // Encode the competition ID as 8 little-endian bytes (CompetitionState.id field)
-  const idBytes = new Uint8Array(8);
+  // Encode the competition ID as 32 bytes (u64 LE in first 8 bytes, rest zeroed).
+  const idBytes = new Uint8Array(32);
   new DataView(idBytes.buffer).setBigUint64(0, competitionId, true);
 
-  // Derive PDAs sequentially: AuctionState depends on CompetitionState address
+  // Derive PDAs sequentially: AuctionState depends on CompetitionState address.
   const [competitionAddress] = await getCompetitionStatePda(authority.address, competitionId);
   const [[auctionStateAddress], [protocolConfigAddress]] = await Promise.all([
     getAuctionStatePda(competitionAddress),
     getProtocolConfigPda(),
   ]);
 
-  // Encode assetMint address to raw 32 bytes (instruction data expects ReadonlyUint8Array)
-  const assetMintBytes = addrEnc.encode(assetMint);
-
-  const createCompetitionIx = getCreateCompetitionInstruction({
-    competition: competitionAddress,
+  const createCompetitionIx = buildCreateCompetitionIx({
+    competition:        competitionAddress,
     authority,
     payer,
-    protocolConfig: protocolConfigAddress,
-    id: idBytes,
+    protocolConfig:     protocolConfigAddress,
+    id:                 idBytes,
     assetType,
-    pad: new Uint8Array(6),
     startTime,
     durationSecs,
     softCloseWindow,
     softCloseExtension,
     maxSoftCloses,
-    pad2: new Uint8Array(2),
     reservePrice,
   });
 
-  const createAuctionIx = getCreateAuctionInstruction({
-    auctionState: auctionStateAddress,
-    competition: competitionAddress,
+  const createAuctionIx = buildCreateAuctionIx({
+    auctionState:    auctionStateAddress,
+    competition:     competitionAddress,
     authority,
     payer,
-    assetMint: assetMintBytes,
+    assetMint,
     minBidIncrement,
   });
 

@@ -36,8 +36,6 @@ import {
   getPermissionPda,
   MAGICBLOCK_DELEGATION_PROGRAM_ADDRESS,
   MAGICBLOCK_PERMISSION_PROGRAM_ADDRESS,
-  PHASE_SCHEDULED,
-  PHASE_CANCELLED,
   type MagicBlockActivateCompetitionAccounts,
   type MagicBlockDelegationAccounts,
 } from 'tyche-sdk';
@@ -73,7 +71,7 @@ describe('Phase 1 — create competition + auction', () => {
         authority,
         payer:           authority,
         competitionId:   id,
-        startTime:       BigInt(Math.floor(Date.now() / 1000)),
+        startTime:       BigInt(Math.floor(Date.now() / 1000)) + 60n,
         durationSecs:    3_600n,
         reservePrice:    500_000_000n,
         assetMint:       DUMMY_MINT,
@@ -87,7 +85,7 @@ describe('Phase 1 — create competition + auction', () => {
       fetchDecodedAuction(rpc, auctionStateAddress),
     ]);
 
-    expect(comp.phase).toBe(PHASE_SCHEDULED);
+    expect(comp.phase).toBe('scheduled');
     expect(auction.competition).toBe(competitionAddress);
   });
 });
@@ -102,7 +100,7 @@ describe('Cancel path — Scheduled → Cancelled', () => {
         authority,
         payer:         authority,
         competitionId: id,
-        startTime:     BigInt(Math.floor(Date.now() / 1000)),
+        startTime:     BigInt(Math.floor(Date.now() / 1000)) + 60n,
         durationSecs:  3_600n,
         reservePrice:  500_000_000n,
         assetMint:     DUMMY_MINT,
@@ -121,7 +119,7 @@ describe('Cancel path — Scheduled → Cancelled', () => {
     await sendAndConfirm(cancelIxs, authority);
 
     const comp = await fetchDecodedCompetition(rpc, competitionAddress);
-    expect(comp.phase).toBe(PHASE_CANCELLED);
+    expect(comp.phase).toBe('cancelled');
 
     // AuctionState should be closed after cancel
     const auctionExists = await accountExists(auctionStateAddress);
@@ -142,7 +140,7 @@ describe.skipIf(!hasMagicBlock)('Full lifecycle — create → activate → bid 
         authority,
         payer:           authority,
         competitionId:   id,
-        startTime:       BigInt(Math.floor(Date.now() / 1000)),
+        startTime:       BigInt(Math.floor(Date.now() / 1000)) + 60n,
         durationSecs:    3_600n,
         reservePrice:    500_000_000n,
         assetMint:       DUMMY_MINT,
@@ -167,7 +165,7 @@ describe.skipIf(!hasMagicBlock)('Full lifecycle — create → activate → bid 
       getDelegationBufferPda(auctionStateAddress),
       getDelegationRecordPda(auctionStateAddress),
       getDelegationMetadataPda(auctionStateAddress),
-      getPermissionPda(authority.address),
+      getPermissionPda(competitionAddress),
     ]);
 
     const competitionDelegation: MagicBlockActivateCompetitionAccounts = {

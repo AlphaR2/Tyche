@@ -130,15 +130,15 @@ describe('getDelegationBufferPda', () => {
 // ── MagicBlock permission PDA ─────────────────────────────────────────────────
 
 describe('getPermissionPda', () => {
-  it('returns a valid address for an authority', async () => {
-    const [addr, bump] = await getPermissionPda(AUTHORITY);
+  it('returns a valid address for a target account', async () => {
+    const [addr, bump] = await getPermissionPda(AUTHORITY); // AUTHORITY acts as dummy target
     expect(typeof addr).toBe('string');
     expect(addr.length).toBeGreaterThan(30);
     expect(bump).toBeGreaterThanOrEqual(0);
     expect(bump).toBeLessThanOrEqual(255);
   });
 
-  it('produces different PDAs for different authorities', async () => {
+  it('produces different PDAs for different targets', async () => {
     const [p1] = await getPermissionPda(AUTHORITY);
     const [p2] = await getPermissionPda(BIDDER);
     expect(p1).not.toBe(p2);

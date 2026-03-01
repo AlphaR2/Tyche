@@ -16,12 +16,7 @@
  */
 
 import type { Address, Instruction, TransactionSigner } from '@solana/kit';
-import { getCancelCompetitionInstruction } from 'tyche-generated-core';
-import { getCancelAuctionInstruction } from 'tyche-generated-auction';
-import {
-  getCompetitionStatePda,
-  getAuctionStatePda,
-} from '../pdas';
+import { buildCancelCompetitionIx, buildCancelAuctionIx } from '../rawInstructions.js';
 
 /** The system program address (zero pubkey equivalent for optional MagicBlock accounts). */
 const SYSTEM_PROGRAM = '11111111111111111111111111111111' as Address;
@@ -97,17 +92,17 @@ export function buildCancelAuctionTransaction(
   const magicContext = magicBlock?.magicContext ?? SYSTEM_PROGRAM;
   const magicProgram = magicBlock?.magicProgram ?? SYSTEM_PROGRAM;
 
-  const cancelCompetitionIx = getCancelCompetitionInstruction({
-    competition: competitionAddress,
+  const cancelCompetitionIx = buildCancelCompetitionIx({
+    competition:  competitionAddress,
     authority,
     permission,
     magicContext,
     magicProgram,
   });
 
-  const cancelAuctionIx = getCancelAuctionInstruction({
-    auctionState: auctionStateAddress,
-    competition: competitionAddress,
+  const cancelAuctionIx = buildCancelAuctionIx({
+    auctionState:  auctionStateAddress,
+    competition:   competitionAddress,
     authority,
     rentRecipient,
   });

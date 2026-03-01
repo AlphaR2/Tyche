@@ -484,7 +484,7 @@ describe.skipIf(!hasMagicBlock)('UpdateVoterWeightRecord (MagicBlock required)',
     const [protocolConfig]    = await getProtocolConfigPda();
     const [vaultPda]          = await getEscrowVaultPda(competitionPda, bidder1.address);
 
-    const idBytes = new Uint8Array(8);
+    const idBytes = new Uint8Array(32);
     new DataView(idBytes.buffer).setBigUint64(0, competitionId, true);
 
     // Create competition

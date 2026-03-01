@@ -70,6 +70,7 @@ export {
 } from './constants';
 
 export type { AssetType, CompetitionPhase as CompetitionPhaseConst } from './constants';
+export * from './router';
 
 // ── PDA Derivations ──────────────────────────────────────────────────────────
 

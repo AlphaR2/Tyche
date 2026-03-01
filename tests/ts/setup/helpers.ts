@@ -24,7 +24,8 @@ import {
   type Blockhash,
   type Address,
 } from '@solana/kit';
-import { rpc, rpcSubscriptions, rpcUrl } from './env.js';
+import { rpc, rpcSubscriptions, rpcUrl, MAGICBLOCK_ROUTER_URL } from './env.js';
+import { getBlockhashForAccounts as SDKGetBlockhashForAccounts } from '../../../packages/sdk/src/router';
 
 // ── Shared send-and-confirm ───────────────────────────────────────────────────
 
@@ -83,7 +84,9 @@ export async function sendAndConfirm(
 
   const signed = await buildSignedTx(instructions, payer, latestBlockhash);
   await sendAndConfirmTx(signed as Parameters<typeof sendAndConfirmTx>[0], { commitment: 'confirmed' });
-  return getSignatureFromTransaction(signed);
+  const sig = getSignatureFromTransaction(signed);
+  console.log(`[Demo] Transaction Confirmed: https://explorer.solana.com/tx/${sig}?cluster=devnet`);
+  return sig;
 }
 
 /**
@@ -104,7 +107,9 @@ export async function sendAndConfirmWithBlockhash(
 ): Promise<string> {
   const signed = await buildSignedTx(instructions, payer, blockhash);
   await sendAndConfirmTx(signed as Parameters<typeof sendAndConfirmTx>[0], { commitment: 'confirmed' });
-  return getSignatureFromTransaction(signed);
+  const sig = getSignatureFromTransaction(signed);
+  console.log(`[Demo] Transaction Confirmed: https://explorer.solana.com/tx/${sig}?cluster=devnet`);
+  return sig;
 }
 
 // ── MagicBlock Router: getBlockhashForAccounts ────────────────────────────────
@@ -121,31 +126,11 @@ export async function sendAndConfirmWithBlockhash(
 export async function getBlockhashForAccounts(
   accounts: Address[],
 ): Promise<BlockhashLifetime> {
-  const response = await fetch(rpcUrl, {
-    method:  'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body:    JSON.stringify({
-      jsonrpc: '2.0',
-      id:      1,
-      method:  'getBlockhashForAccounts',
-      params:  [accounts, { commitment: 'confirmed' }],
-    }),
-  });
-
-  const json = await response.json() as {
-    result?: { value: { blockhash: string; lastValidBlockHeight: number } };
-    error?:  { message: string };
-  };
-
-  if (json.error) {
-    throw new Error(`getBlockhashForAccounts failed: ${json.error.message}`);
-  }
-
-  const { blockhash, lastValidBlockHeight } = json.result!.value;
+  const result = await SDKGetBlockhashForAccounts(MAGICBLOCK_ROUTER_URL, accounts);
   return {
-    blockhash:            blockhash as Blockhash,
-    lastValidBlockHeight: BigInt(lastValidBlockHeight),
-  };
+    blockhash: result.blockhash,
+    lastValidBlockHeight: result.lastValidBlockHeight,
+  } as BlockhashLifetime;
 }
 
 // ── Account helpers ───────────────────────────────────────────────────────────
